@@ -1,0 +1,28 @@
+comandos para trocar senha e alterar senha Root
+
+mysqladmin -u root password nova senha
+
+entrar no phpmyadmin e colocar cookie no lugar de config para pedir usuario e senha na abertura
+deixar usuario em branco e senha tbm
+
+alterar senha (precisa do mysql nas variaveis de ambiente para reconhecer os comandos)
+
+
+C:\Users\Diego Woolley>mysql -u root -p -h localhost
+Enter password: ********
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 11
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use mysql
+Database changed
+MariaDB [mysql]> update user set password =('88757429') where user= 'root' and host='localhost';
+ERROR 1348 (HY000): Column 'Password' is not updatable
+MariaDB [mysql]> alter user'root'@'localhost' identified by '';
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [mysql]> flush privileges
