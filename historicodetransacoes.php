@@ -18,7 +18,7 @@ $navBar->render();
 
 
 <div class="container">
-  <h1 class="mt-5">Histórico de Transações do Dia</h1>  
+  <h1 class="mt-5">Histórico de Transações do Mês</h1>  
   <div style="overflow-x: auto;">
     <table class="table table-striped mt-3">
       <thead>
@@ -36,36 +36,7 @@ $navBar->render();
         </tr>
       </thead>
       <tbody>
-        <?php
-        include 'models/conexao.php'; // Inclui o arquivo de conexão com o banco de dados
-
-        $conn = conectarBanco(); // Conecta ao banco de dados
-
-        $sql = "SELECT cod_venda, tipo, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE DATE(data) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
-
-        $result = $conn->query($sql); // Executa a consulta SQL
-
-        if ($result->num_rows > 0) {
-            // Exibe os dados na tabela
-            while($row = $result->fetch_assoc()) {
-                echo "<tr class='text-center'>";
-                echo "<td>" . $row['cod_venda'] . "</td>";
-                echo "<td>" . $row['tipo'] . "</td>";
-                echo "<td>" . $row['cliente'] . "</td>";
-                echo "<td>" . $row['vendedor'] . "</td>";
-                echo "<td>R$ " . number_format($row['valor_pago'], 2, ',', '.') . "</td>";
-                echo "<td>R$ " . number_format($row['valor_total'], 2, ',', '.') . "</td>";
-                echo "<td>" . $row['forma_pagamento'] . "</td>";
-                echo "<td>" . $row['desconto'] . "</td>";
-                echo "<td>" . $row['taxa'] . "</td>";
-                echo "<td>" . $row['status'] . "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='10'>Nenhum registro encontrado</td></tr>";
-        }
-        $conn->close(); // Fecha a conexão com o banco de dados
-        ?>
+      <?php include 'models/metodos.php'; listartrasaçoes(); ?>
       </tbody>
     </table>
   </div>

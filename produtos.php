@@ -30,29 +30,7 @@ $navBar->render();
                 </tr>
             </thead>
             <tbody>
-                <?php
-                include 'models/conexao.php'; // Inclui o arquivo de conexão com o banco de dados
-
-                $conn = conectarBanco(); // Conecta ao banco de dados
-
-                $sql = "SELECT cod_produto, nome_produto, categoria_produto, valor_venda FROM cad_produtos";
-                $result = $conn->query($sql); // Executa a consulta SQL
-
-                if ($result->num_rows > 0) {
-                    // Exibe os dados na tabela
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr class='text-center'>";
-                        echo "<td>" . $row['cod_produto'] . "</td>";
-                        echo "<td>" . $row['nome_produto'] . "</td>";
-                        echo "<td>" . $row['categoria_produto'] . "</td>";
-                        echo "<td>R$ " . number_format($row['valor_venda'], 2, ',', '.') . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4'>Nenhum registro encontrado</td></tr>";
-                }
-                $conn->close(); // Fecha a conexão com o banco de dados
-                ?>
+            <?php include 'models/metodos.php'; listarprodutos(); ?>
             </tbody>
         </table>
     </div>

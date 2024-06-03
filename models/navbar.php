@@ -34,7 +34,7 @@ class NavBar {
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="venda.php">Pedido de Venda</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Pedido de Compra</a></li>
+                                <li><a class="dropdown-item" href="compra.php">Pedido de Compra</a></li>
                             </ul>
                         </li>         
                     </ul>    
