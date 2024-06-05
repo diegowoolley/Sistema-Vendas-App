@@ -119,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 }
 
 function buscarProdutos()
-{  
+{
     include 'models/conexao.php';
     $con = conectarBanco();
     echo "<script>document.getElementById('tb_produto').innerHTML = 
@@ -139,8 +139,8 @@ function buscarProdutos()
             </table>
         </div>
     </script>";
-    if (isset($_GET['buscar'])) {
-        $pesquisa = mysqli_real_escape_string($con, $_GET['buscar']); // Escapa a string de busca
+    if (isset($_GET['buscarprodutos'])) {
+        $pesquisa = mysqli_real_escape_string($con, $_GET['buscarprodutos']); // Escapa a string de busca
         $sql = "SELECT * FROM cad_produtos WHERE cod_produto LIKE '%" . $pesquisa . "%' OR nome_produto LIKE '%" . $pesquisa . "%'";
         $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
 
@@ -157,6 +157,61 @@ function buscarProdutos()
             }
         } else {
             echo "<tr><td colspan='4'>Nenhum registro encontrado.</td></tr>";
+        }
+    }
+}
+
+function buscarTransacoes()
+{
+    include 'models/conexao.php';
+    $con = conectarBanco();
+    echo "<script>document.getElementById('tb_produto').innerHTML = 
+    <div style='overflow-x: auto;'>
+        <table class='table table-primary table-striped mt-3 table table-hover table-bordered table-sm'; 
+            id='tb_produto'>
+            <thead>
+                <tr class='text-center'>
+                    <th scope='col'>Cód. Venda</th>
+                    <th scope='col'>Tipo</th>
+                    <th scope='col'>Cliente</th>
+                    <th scope='col'>Vendedor</th>
+                    <th scope='col'>Valor Pago</th>
+                    <th scope='col'>Valor Total</th>                   
+                    <th scope='col'>Forma de Pagamento</th>
+                    <th scope='col'>Desconto</th>
+                    <th scope='col'>Taxa</th>
+                    <th scope='col'>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</script>";
+    if (isset($_GET['buscartransacoes'])) {
+        $pesquisa = mysqli_real_escape_string($con, $_GET['buscartransacoes']); // Escapa a string de busca
+        $sql = "SELECT * FROM caixa WHERE cod_venda LIKE '%" . $pesquisa . "%' OR cliente LIKE '%" . $pesquisa . "%'";
+        $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
+
+        if ($sql_query->num_rows > 0) {
+            // Loop através dos resultados
+
+            while ($row = $sql_query->fetch_assoc()) {
+                echo "<tr class='text-center'>";
+                echo "<td>" . $row['cod_venda'] . "</td>";
+                echo "<td>" . $row['tipo'] . "</td>";
+                echo "<td>" . $row['cliente'] . "</td>";
+                echo "<td>" . $row['vendedor'] . "</td>";
+                echo "<td>R$ " . number_format($row['valor_pago'], 2, ',', '.') . "</td>";
+                echo "<td>R$ " . number_format($row['valor_total'], 2, ',', '.') . "</td>";
+                echo "<td>" . $row['forma_pagamento'] . "</td>";
+                echo "<td>" . $row['desconto'] . "</td>";
+                echo "<td>" . $row['taxa'] . "</td>";
+                echo "<td>" . $row['status'] . "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='10'>Nenhum registro encontrado.</td></tr>";
         }
     }
 }

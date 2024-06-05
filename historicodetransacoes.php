@@ -5,7 +5,6 @@ include_once ('models/metodos.php');
 // Chamada da função para verificar autenticação
 verificarAutenticacao();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -45,9 +44,9 @@ verificarAutenticacao();
     }
   </style>
 
-
-  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="models/metodos.php">
-    <input class="form-control me-2" type="search" name="query" placeholder="Buscar Produtos" aria-label="Buscar">
+  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="">
+    <input name="buscartransacoes" class="form-control me-2" type="search" placeholder="Buscar Transações"
+      aria-label="Buscar">
     <button class="btn btn-sm btn-light" type="submit">
       <img src="src/lupa.png" alt="lupa" width="30" height="30">
     </button>
@@ -74,7 +73,16 @@ verificarAutenticacao();
         </thead>
         <tbody>
           <?php
-          listartrasaçoes(); ?>
+         
+          include_once('models/metodos.php');
+
+          if (isset($_GET['buscartransacoes']) && $_GET['buscartransacoes'] !== '') {
+              buscarTransacoes();
+          } else {
+              listartrasaçoes();
+          };
+
+          ?>
         </tbody>
       </table>
     </div>

@@ -1,3 +1,10 @@
+<?php
+// Inclui o arquivo que contém as funções de autenticação
+include_once ('models/metodos.php');
+
+// Chamada da função para verificar autenticação
+verificarAutenticacao();
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -40,7 +47,7 @@
 
 
     <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="">
-        <input name="buscar" class="form-control me-2" type="search" placeholder="Buscar Produtos" aria-label="Buscar">
+        <input name="buscarprodutos" class="form-control me-2" type="search" placeholder="Buscar Produtos" aria-label="Buscar">
         <button class="btn btn-sm btn-light" type="submit">
             <img src="src/lupa.png" alt="lupa" width="30" height="30">
         </button>
@@ -61,14 +68,14 @@
                 </thead>
                 <tbody>
                     <?php
-                    include 'models/metodos.php';
+                    include_once ('models/metodos.php');
 
-                    if (isset($_GET['buscar']) && $_GET['buscar'] !== '') {
+                    if (isset($_GET['buscarprodutos']) && $_GET['buscarprodutos'] !== '') {
                         buscarProdutos();
                     } else {
                         listarprodutos();
                     };
-                    
+
                     ?>
                 </tbody>
             </table>
