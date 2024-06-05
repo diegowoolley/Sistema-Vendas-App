@@ -29,10 +29,29 @@ verificarAutenticacao();
   ?>
 
 
-  <div class="container">
-    <h1 class="mt-5">Vendas Hoje</h1>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #00008B, #87CEEB);
+    }
+
+    .table {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      font-size: 0.9em;
+    }
+  </style>
+
+  <div class="container text-white">
+    <h4 class="mt-5">Vendas Hoje</h4>
     <div style="overflow-x: auto;">
-      <table class="table table-striped mt-3">
+      <table class="table table-primary table-striped mt-3 table-hover table-bordered table-sm">
         <thead>
           <tr class='text-center'>
             <th scope="col">Código da Venda</th>
@@ -54,10 +73,12 @@ verificarAutenticacao();
   </div>
 
 
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-    <script src="models/scripts.js"></script>
+  <script src="models/scripts.js"></script>
 
 </body>
 

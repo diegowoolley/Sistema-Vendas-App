@@ -60,7 +60,7 @@ class NavBar
                 </div>
                 <form class="d-flex ms-auto">
                     <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
-                    <button class="btn btn-light" type="submit">
+                    <button class="btn btn-sm btn-light" type="submit">
                         <img src="src/lupa.png" alt="lupa" width="30" height="30"></button>
                 </form>
             </div>

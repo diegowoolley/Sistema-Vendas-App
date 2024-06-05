@@ -26,11 +26,28 @@ verificarAutenticacao();
     $navBar->render();
     ?>
 
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #00008B, #87CEEB);
+        }
+
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+            font-size: 0.9em;
+        }
+    </style>
 
     <div class="container">
-        <h1 class="mt-5">Lista de Produtos</h1>
+        <h4 class="mt-5 text-white">Lista de Produtos</h4>
         <div style="overflow-x: auto;">
-            <table class="table table-striped mt-3">
+            <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm">
                 <thead>
                     <tr class='text-center'>
                         <th scope="col">Código</th>
