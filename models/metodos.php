@@ -1,9 +1,7 @@
 <?php
-
-
-function vendashoje() {
-    include 'models/conexao.php'; // Inclui o arquivo de conexão com o banco de dados
-
+function vendashoje()
+{
+    include 'models/conexao.php';
     $conn = conectarBanco(); // Conecta ao banco de dados
 
     $sql = "SELECT cod_venda, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND data = CURDATE()";
@@ -11,7 +9,7 @@ function vendashoje() {
 
     if ($result->num_rows > 0) {
         // Exibe os dados na tabela
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo "<tr class='text-center'>";
             echo "<td>" . $row['cod_venda'] . "</td>";
             echo "<td>" . $row['cliente'] . "</td>";
@@ -30,12 +28,10 @@ function vendashoje() {
     $conn->close(); // Fecha a conexão com o banco de dados
 }
 
-
-
-function listarprodutos() 
+function listarprodutos()
 {
-    include 'models/conexao.php'; // Inclui o arquivo de conexão com o banco de dados
 
+    include 'models/conexao.php';
     $conn = conectarBanco(); // Conecta ao banco de dados
 
     $sql = "SELECT cod_produto, nome_produto, categoria_produto, valor_venda FROM cad_produtos";
@@ -43,7 +39,7 @@ function listarprodutos()
 
     if ($result->num_rows > 0) {
         // Exibe os dados na tabela
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo "<tr class='text-center'>";
             echo "<td>" . $row['cod_produto'] . "</td>";
             echo "<td>" . $row['nome_produto'] . "</td>";
@@ -56,43 +52,44 @@ function listarprodutos()
     }
     $conn->close(); // Fecha a conexão com o banco de dados
 }
-         
 
-function listartrasaçoes(){
-   
-        include 'models/conexao.php'; // Inclui o arquivo de conexão com o banco de dados
 
-        $conn = conectarBanco(); // Conecta ao banco de dados
+function listartrasaçoes()
+{
+    include 'models/conexao.php';
 
-        $sql = "SELECT cod_venda, tipo, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE DATE(data) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
+    $conn = conectarBanco(); // Conecta ao banco de dados
 
-        $result = $conn->query($sql); // Executa a consulta SQL
+    $sql = "SELECT cod_venda, tipo, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE DATE(data) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
 
-        if ($result->num_rows > 0) {
-            // Exibe os dados na tabela
-            while($row = $result->fetch_assoc()) {
-                echo "<tr class='text-center'>";
-                echo "<td>" . $row['cod_venda'] . "</td>";
-                echo "<td>" . $row['tipo'] . "</td>";
-                echo "<td>" . $row['cliente'] . "</td>";
-                echo "<td>" . $row['vendedor'] . "</td>";
-                echo "<td>R$ " . number_format($row['valor_pago'], 2, ',', '.') . "</td>";
-                echo "<td>R$ " . number_format($row['valor_total'], 2, ',', '.') . "</td>";
-                echo "<td>" . $row['forma_pagamento'] . "</td>";
-                echo "<td>" . $row['desconto'] . "</td>";
-                echo "<td>" . $row['taxa'] . "</td>";
-                echo "<td>" . $row['status'] . "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='10'>Nenhum registro encontrado</td></tr>";
+    $result = $conn->query($sql); // Executa a consulta SQL
+
+    if ($result->num_rows > 0) {
+        // Exibe os dados na tabela
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr class='text-center'>";
+            echo "<td>" . $row['cod_venda'] . "</td>";
+            echo "<td>" . $row['tipo'] . "</td>";
+            echo "<td>" . $row['cliente'] . "</td>";
+            echo "<td>" . $row['vendedor'] . "</td>";
+            echo "<td>R$ " . number_format($row['valor_pago'], 2, ',', '.') . "</td>";
+            echo "<td>R$ " . number_format($row['valor_total'], 2, ',', '.') . "</td>";
+            echo "<td>" . $row['forma_pagamento'] . "</td>";
+            echo "<td>" . $row['desconto'] . "</td>";
+            echo "<td>" . $row['taxa'] . "</td>";
+            echo "<td>" . $row['status'] . "</td>";
+            echo "</tr>";
         }
-        $conn->close(); // Fecha a conexão com o banco de dados
-  
+    } else {
+        echo "<tr><td colspan='10'>Nenhum registro encontrado</td></tr>";
+    }
+    $conn->close(); // Fecha a conexão com o banco de dados
+
 }
 
 // Função para verificar se o usuário está autenticado
-function verificarAutenticacao() {
+function verificarAutenticacao()
+{
     // Inicia a sessão
     session_start();
     // Verifica se a sessão do usuário está ativa
@@ -103,7 +100,8 @@ function verificarAutenticacao() {
     }
 }
 
-function fazerLogout() {
+function fazerLogout()
+{
     // Inicie ou retome a sessão
     session_start();
 
@@ -118,5 +116,48 @@ function fazerLogout() {
 // Verifica se a ação de logout foi solicitada
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     fazerLogout();
+}
+
+function buscarProdutos()
+{  
+    include 'models/conexao.php';
+    $con = conectarBanco();
+    echo "<script>document.getElementById('tb_produto').innerHTML = 
+        <div style='overflow-x: auto;'>
+            <table class='table table-primary table-striped mt-3 table table-hover table-bordered table-sm'; 
+                id='tb_produto'>
+                <thead>
+                    <tr class='text-center'>
+                        <th scope='col'>Código</th>
+                        <th scope='col'>Descrição</th>
+                        <th scope='col'>Categoria</th>
+                        <th scope='col'>Valor Unitário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </script>";
+    if (isset($_GET['buscar'])) {
+        $pesquisa = mysqli_real_escape_string($con, $_GET['buscar']); // Escapa a string de busca
+        $sql = "SELECT * FROM cad_produtos WHERE cod_produto LIKE '%" . $pesquisa . "%' OR nome_produto LIKE '%" . $pesquisa . "%'";
+        $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
+
+        if ($sql_query->num_rows > 0) {
+            // Loop através dos resultados
+
+            while ($row = $sql_query->fetch_assoc()) {
+                echo "<tr class='text-center'>";
+                echo "<td>" . $row["cod_produto"] . "</td>";
+                echo "<td>" . $row["nome_produto"] . "</td>";
+                echo "<td>" . $row["categoria_produto"] . "</td>";
+                echo "<td>R$ " . number_format($row["valor_venda"], 2, ',', '.') . "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='4'>Nenhum registro encontrado.</td></tr>";
+        }
+    }
 }
 ?>

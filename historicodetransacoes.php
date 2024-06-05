@@ -37,6 +37,7 @@ verificarAutenticacao();
     body {
       background: linear-gradient(to bottom, #00008B, #87CEEB);
     }
+
     .table {
       border-radius: 15px;
       overflow: hidden;
@@ -44,8 +45,17 @@ verificarAutenticacao();
     }
   </style>
 
+
+  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="models/metodos.php">
+    <input class="form-control me-2" type="search" name="query" placeholder="Buscar Produtos" aria-label="Buscar">
+    <button class="btn btn-sm btn-light" type="submit">
+      <img src="src/lupa.png" alt="lupa" width="30" height="30">
+    </button>
+  </form>
+
+
   <div class="container">
-    <h4 class="mt-5 text-white">Histórico de Transações do Mês</h4>
+    <h4 class="mt-3 text-white">Histórico de Transações do Mês</h4>
     <div style="overflow-x: auto;">
       <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm">
         <thead>

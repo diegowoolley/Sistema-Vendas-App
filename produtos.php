@@ -1,10 +1,3 @@
-<?php
-// Inclui o arquivo que contém as funções de autenticação
-include_once ('models/metodos.php');
-
-// Chamada da função para verificar autenticação
-verificarAutenticacao();
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -18,12 +11,13 @@ verificarAutenticacao();
 
 <body>
     <?php
-    include 'models/navbar.php'; // Inclua a classe NavBar
-    
+    include 'models/navbar.php'; // Inclua a classe NavBar 
     $navBar = new NavBar(); // Instancie a classe NavBar
     
     // Renderize a barra de navegação
     $navBar->render();
+
+
     ?>
 
     <style>
@@ -44,10 +38,19 @@ verificarAutenticacao();
         }
     </style>
 
+
+    <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="">
+        <input name="buscar" class="form-control me-2" type="search" placeholder="Buscar Produtos" aria-label="Buscar">
+        <button class="btn btn-sm btn-light" type="submit">
+            <img src="src/lupa.png" alt="lupa" width="30" height="30">
+        </button>
+    </form>
+
     <div class="container">
-        <h4 class="mt-5 text-white">Lista de Produtos</h4>
+        <h4 class="mt-3 text-white">Lista de Produtos</h4>
         <div style="overflow-x: auto;">
-            <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm">
+            <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm"
+                id="tb_produto">
                 <thead>
                     <tr class='text-center'>
                         <th scope="col">Código</th>
@@ -58,7 +61,15 @@ verificarAutenticacao();
                 </thead>
                 <tbody>
                     <?php
-                    listarprodutos(); ?>
+                    include 'models/metodos.php';
+
+                    if (isset($_GET['buscar']) && $_GET['buscar'] !== '') {
+                        buscarProdutos();
+                    } else {
+                        listarprodutos();
+                    };
+                    
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -69,6 +80,7 @@ verificarAutenticacao();
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script src="models/scripts.js"></script>
+
 </body>
 
 </html>
