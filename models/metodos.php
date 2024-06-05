@@ -56,8 +56,7 @@ function listarprodutos()
     }
     $conn->close(); // Fecha a conexão com o banco de dados
 }
-          
-
+         
 
 function listartrasaçoes(){
    
@@ -92,5 +91,32 @@ function listartrasaçoes(){
   
 }
 
+// Função para verificar se o usuário está autenticado
+function verificarAutenticacao() {
+    // Inicia a sessão
+    session_start();
+    // Verifica se a sessão do usuário está ativa
+    if (!isset($_SESSION['usuario'])) {
+        // Se não estiver, redireciona o usuário de volta para a página de login
+        header("Location: login.php");
+        exit;
+    }
+}
 
+function fazerLogout() {
+    // Inicie ou retome a sessão
+    session_start();
+
+    // Destrua todas as variáveis de sessão
+    session_destroy();
+
+    // Redirecione para a página de login
+    header("Location: ../login.php"); // Caminho atualizado para garantir o redirecionamento correto
+    exit;
+}
+
+// Verifica se a ação de logout foi solicitada
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    fazerLogout();
+}
 ?>

@@ -1,3 +1,11 @@
+<?php
+// Inclui o arquivo que contém as funções de autenticação
+include_once ('models/metodos.php');
+
+// Chamada da função para verificar autenticação
+verificarAutenticacao();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -187,6 +195,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="models/scripts.js"></script>
   <script>
     // Converte o campo de entrada para formato de moeda
     var inputs = document.getElementsByClassName('moeda');

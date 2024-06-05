@@ -13,6 +13,4 @@ function conectarBanco() {
 
     return $conn;
 }
-
-
 ?>
