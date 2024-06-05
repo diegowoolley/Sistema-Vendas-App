@@ -188,9 +188,9 @@ verificarAutenticacao();
             <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago">
           </div>
           <div class="col-12">
-            <label class="form-label">Troco:</label>
+            <label class="form-label">Vencimento:</label>
             <div class="input-group mx-auto" style="width: 10rem;">
-              <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txttroco">
+              <input type="date" class="form-control moeda" aria-label="Valor Pago" id="txttroco">
             </div>
           </div>
         </div>
