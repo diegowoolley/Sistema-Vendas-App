@@ -245,7 +245,7 @@ function buscarvendas()
 </script>";
     if (isset($_GET['buscarvendas'])) {
         $pesquisa = mysqli_real_escape_string($con, $_GET['buscarvendas']); // Escapa a string de busca
-        $sql = "SELECT * FROM caixa WHERE (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND cod_venda LIKE '%" . $pesquisa . "%'";
+        $sql = "SELECT * FROM caixa WHERE (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND cod_venda LIKE '%" . $pesquisa . "%' AND data = CURDATE()";
         $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
 
         if ($sql_query->num_rows > 0) {
