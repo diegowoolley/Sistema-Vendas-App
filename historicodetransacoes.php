@@ -44,7 +44,7 @@ verificarAutenticacao();
     }
   </style>
 
-  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="">
+  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;">
     <input name="buscartransacoes" class="form-control me-2" type="search" placeholder="Buscar Transações"
       aria-label="Buscar">
     <button class="btn btn-sm btn-light" type="submit">

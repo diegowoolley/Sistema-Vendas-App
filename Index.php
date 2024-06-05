@@ -48,7 +48,7 @@ verificarAutenticacao();
     }
   </style>
 
-  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;" action="models/metodos.php">
+  <form class="d-flex ms-auto me-2 mt-1" style="width: 35rem;">
     <input name="buscar" class="form-control me-2" type="search" placeholder="Buscar Vendas" aria-label="Buscar">
     <button class="btn btn-sm btn-light" type="submit" id="btnbuscar">
       <img src="src/lupa.png" alt="lupa" width="30" height="30">
