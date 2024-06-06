@@ -171,10 +171,10 @@ verificarAutenticacao();
 
     <div class="container border p-2 mt-2">
       <div class="row justify-content-center">
-        <div class="col-12 col-md-6 text-center">
+        <div class="col-12 col-md-4 mb-3 text-center">
           <label class="form-label">Forma de Pagamento:</label>
-          <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;" disabled
-            id="cbforma_pagamento">
+          <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;"
+            id="cbforma_pagamento" disabled>
             <option selected>Selecione...</option>
             <option value="1">Dinheiro</option>
             <option value="2">Cartão de Crédito</option>
@@ -183,46 +183,46 @@ verificarAutenticacao();
             <option value="5">Crédito Cliente</option>
           </select>
         </div>
-        <div class="col-12 col-md-6 text-center">
+        <div class="col-12 col-md-4 mb-3 text-center">
           <label class="form-label">Valor Pago:</label>
           <div class="input-group mx-auto" style="width: 10rem;">
             <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago" disabled>
           </div>
-          <div class="col-12">
-            <label class="form-label">Troco:</label>
-            <div class="input-group mx-auto" style="width: 10rem;">
-              <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txttroco" disabled>
-            </div>
+        </div>
+        <div class="col-12 col-md-4 mb-4 text-center">
+          <label class="form-label">Troco:</label>
+          <div class="input-group mx-auto" style="width: 10rem;">
+            <input type="text" class="form-control moeda" aria-label="troco" id="txtvencimento" disabled>
           </div>
         </div>
       </div>
+    </div>
 
 
-      <div class="row justify-content-center">
-        <div class="col-md-2">
-          <label class="form-label">Dinheiro:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00"
-            disabled>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">Pix:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00" disabled>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">Cartão:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00"
-            disabled>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">Desconto:</label>
-          <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">Taxa:</label>
-          <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled>
-        </div>
+    <div class="row justify-content-center">
+      <div class="col-md-2">
+        <label class="form-label">Dinheiro:</label>
+        <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00"
+          disabled>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Pix:</label>
+        <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00" disabled>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Cartão:</label>
+        <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00" disabled>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Desconto:</label>
+        <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Taxa:</label>
+        <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled>
       </div>
     </div>
+
     <div class="row mt-3 text-center">
       <div class="col-6">
         <button class="btn btn-success" style="width: 10rem;">Concluir</button>
@@ -231,23 +231,23 @@ verificarAutenticacao();
         <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
       </div>
     </div>
+  </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>
-    <script src="models/scripts.js"></script>
-    <script>
-      // Converte o campo de entrada para formato de moeda
-      var inputs = document.getElementsByClassName('moeda');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].addEventListener('keyup', function (e) {
-          var valor = this.value.replace(/\D/g, '');
-          valor = (valor / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-          this.value = valor;
-        });
-      }
-    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="models/scripts.js"></script>
+  <script>
+    // Converte o campo de entrada para formato de moeda
+    var inputs = document.getElementsByClassName('moeda');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('keyup', function (e) {
+        var valor = this.value.replace(/\D/g, '');
+        valor = (valor / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        this.value = valor;
+      });
+    }
+  </script>
 
 
 </body>
