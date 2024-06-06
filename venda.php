@@ -43,6 +43,7 @@ verificarAutenticacao();
       overflow: hidden;
       overflow-y: auto;
       background: rgba(255, 255, 255, 0.8);
+
     }
 
     .table {
@@ -172,7 +173,7 @@ verificarAutenticacao();
       <div class="row justify-content-center">
         <div class="col-12 col-md-6 text-center">
           <label class="form-label">Forma de Pagamento:</label>
-          <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;"
+          <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;" disabled
             id="cbforma_pagamento">
             <option selected>Selecione...</option>
             <option value="1">Dinheiro</option>
@@ -185,51 +186,52 @@ verificarAutenticacao();
         <div class="col-12 col-md-6 text-center">
           <label class="form-label">Valor Pago:</label>
           <div class="input-group mx-auto" style="width: 10rem;">
-            <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago">
+            <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago" disabled>
           </div>
           <div class="col-12">
             <label class="form-label">Troco:</label>
             <div class="input-group mx-auto" style="width: 10rem;">
-              <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txttroco">
+              <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txttroco" disabled>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="container border p-2 mt-2">
-        <div class="row justify-content-center">
-          <div class="col-md-2">
-            <label class="form-label">Dinheiro:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Pix:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Cartão:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Desconto:</label>
-            <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Taxa:</label>
-            <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%">
-          </div>
-        </div>
-      </div>
 
-      <div class="row mt-3 text-center">
-        <div class="col-6">
-          <button class="btn btn-success" style="width: 10rem;">Concluir</button>
+      <div class="row justify-content-center">
+        <div class="col-md-2">
+          <label class="form-label">Dinheiro:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00"
+            disabled>
         </div>
-        <div class="col-6">
-          <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
+        <div class="col-md-2">
+          <label class="form-label">Pix:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00" disabled>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Cartão:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00"
+            disabled>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Desconto:</label>
+          <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Taxa:</label>
+          <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled>
         </div>
       </div>
     </div>
+    <div class="row mt-3 text-center">
+      <div class="col-6">
+        <button class="btn btn-success" style="width: 10rem;">Concluir</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
+      </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -246,6 +248,7 @@ verificarAutenticacao();
         });
       }
     </script>
+
 
 </body>
 

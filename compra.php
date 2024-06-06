@@ -196,40 +196,40 @@ verificarAutenticacao();
         </div>
       </div>
 
-      <div class="container border p-2 mt-2">
-        <div class="row justify-content-center">
-          <div class="col-md-2">
-            <label class="form-label">Dinheiro:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Pix:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Cartão:</label>
-            <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Desconto:</label>
-            <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Taxa:</label>
-            <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%">
-          </div>
+      <div class="row justify-content-center">
+        <div class="col-md-2">
+          <label class="form-label">Dinheiro:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00">
         </div>
-      </div>
-
-      <div class="row mt-3 text-center">
-        <div class="col-6">
-          <button class="btn btn-success" style="width: 10rem;">Concluir</button>
+        <div class="col-md-2">
+          <label class="form-label">Pix:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00">
         </div>
-        <div class="col-6">
-          <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
+        <div class="col-md-2">
+          <label class="form-label">Cartão:</label>
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Desconto:</label>
+          <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Taxa:</label>
+          <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%">
         </div>
       </div>
     </div>
+
+
+    <div class="row mt-3 text-center">
+      <div class="col-6">
+        <button class="btn btn-success" style="width: 10rem;">Concluir</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
+      </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
