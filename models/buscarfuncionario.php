@@ -14,9 +14,15 @@ if (isset($_GET['term'])) {
     $clientes = [];
     while ($row = $result->fetch_assoc()) {
         $clientes[] = $row['nome_funcionario'];
+    }    
+    
+    if (count($clientes) > 0) {
+        // Se foram encontrados clientes, retorna os nomes dos clientes
+        echo json_encode($clientes);
+    } else {
+        // Se nenhum cliente foi encontrado, retorna uma mensagem indicando que nenhum cliente foi encontrado
+        echo json_encode(array("error" => "Nenhum vendedor encontrado"));
     }
-
-    echo json_encode($clientes);
 
     $stmt->close();
     $conn->close();

@@ -1,11 +1,11 @@
 <?php
-include_once('conexao.php');
+include_once('conexao.php'); // Inclua o arquivo que contém a função conectarBanco
 
 if (isset($_GET['term'])) {
     $term = $_GET['term'];
-    $conn = conectarBanco();
+    $conn = conectarBanco(); // Utilize a função conectarBanco para obter a conexão
 
-    $stmt = $conn->prepare("SELECT * FROM cad_produtos WHERE nome_produto LIKE ? LIMIT 10");
+    $stmt = $conn->prepare("SELECT nome_produto FROM cad_produtos WHERE nome_produto LIKE ? LIMIT 10");
     $searchTerm = "%" . $term . "%";
     $stmt->bind_param("s", $searchTerm);
     $stmt->execute();
@@ -13,12 +13,16 @@ if (isset($_GET['term'])) {
     
     $produtos = [];
     while ($row = $result->fetch_assoc()) {
-        
-        $produtos[] = $row['nome_produto'];         
-           
-    }
+        $produtos[] = $row['nome_produto'];
+    }    
     
-    echo json_encode($produtos);
+    if (count($produtos) > 0) {
+        // Se foram encontrados produtos, retorna os nomes dos produtos
+        echo json_encode($produtos);
+    } else {
+        // Se nenhum produto foi encontrado, retorna uma mensagem indicando que nenhum produto foi encontrado
+        echo json_encode(array("error" => "Nenhum produto encontrado"));
+    }
 
     $stmt->close();
     $conn->close();

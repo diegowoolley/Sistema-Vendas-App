@@ -5,6 +5,7 @@ include_once ('models/metodos.php');
 // Chamada da função para verificar autenticação
 verificarAutenticacao();
 
+
 ?>
 
 <!DOCTYPE html>
@@ -51,21 +52,24 @@ verificarAutenticacao();
     .card {
       width: 90%;
       max-width: 1200px;
-      margin: 60px;
+      margin: 60px auto;
       border-radius: 15px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       overflow: hidden;
       overflow-y: auto;
+      overflow-x: auto;
       background: rgba(255, 255, 255, 0.8);
 
     }
 
     .table {
+
       background: rgba(0, 0, 0, 0.5);
       border-radius: 15px;
       overflow: hidden;
       color: white;
       font-size: 0.9em;
+
     }
   </style>
 </head>
@@ -79,23 +83,19 @@ verificarAutenticacao();
   // Renderize a barra de navegação
   $navBar->render();
 
-  // Defina os valores das variáveis
-  $numeroVenda = "Número da Venda:";
-  $totalItens = "Total de Itens:";
-  $valorTotal = "Valor Total:";
   ?>
 
   <div class="card p-4">
     <div class="container border p-2">
       <div class="row">
         <div class="col-12 col-md-4 mb-2 mb-md-0">
-          <label class="form-label text-danger fw-bold" id="lblnumerovenda"><?php echo $numeroVenda; ?></label>
+          <label class="form-label text-danger fw-bold" id="lblnumerovenda">Número da Venda:</label>
         </div>
         <div class="col-12 col-md-4 mb-3 mb-md-0">
-          <label class="form-label text-danger fw-bold" id="lbltotalitens"><?php echo $totalItens; ?></label>
+          <label class="form-label text-danger fw-bold" id="lbltotalitens">Total de Itens:</label>
         </div>
         <div class="col-12 col-md-4">
-          <label class="form-label text-danger fw-bold" id="lblvalortotal"><?php echo $valorTotal; ?></label>
+          <label class="form-label text-danger fw-bold" id="lblvalortotal">Valor Total:</label>
         </div>
       </div>
     </div>
@@ -136,9 +136,9 @@ verificarAutenticacao();
       </div>
     </div>
 
-    <div class="container border p-2 mt-2">
-      <div style="overflow-x: auto; overFlow-y: auto;">
-        <table class="table table-striped mt-3 table-hover table-bordered table-sm" id="tb_itens">
+    <div class="table-container border p-2 mt-2" style="overflow-y: scroll; max-height: 150px;">
+      <div style="overflow-x: auto;">
+        <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm" id="tb_itens">
           <thead>
             <tr class="text-center">
               <th scope="col">ID</th>
@@ -154,8 +154,6 @@ verificarAutenticacao();
           </thead>
           <tbody>
             <!-- Aqui você pode adicionar mais linhas conforme necessário -->
-
-            <!-- Adicione mais linhas conforme necessário -->
           </tbody>
         </table>
       </div>
@@ -203,24 +201,25 @@ verificarAutenticacao();
       </div>
       <div class="col-md-2">
         <label class="form-label">Cartão:</label>
-        <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00" disabled>
+        <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00"
+          disabled="true">
       </div>
       <div class="col-md-2">
         <label class="form-label">Desconto:</label>
-        <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled>
+        <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled="true">
       </div>
       <div class="col-md-2">
         <label class="form-label">Taxa:</label>
-        <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled>
+        <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled="true">
       </div>
     </div>
 
     <div class="row mt-3 text-center">
       <div class="col-6">
-        <button class="btn btn-success" style="width: 10rem;">Concluir</button>
+        <button class="btn btn-success" style="width: 10rem;" id="btnconcluir" disabled>Concluir</button>
       </div>
       <div class="col-6">
-        <button class="btn btn-warning" style="width: 10rem;">Cancelar</button>
+        <button class="btn btn-warning" style="width: 10rem;" id="btncancelar">Cancelar</button>
       </div>
     </div>
   </div>
@@ -246,7 +245,73 @@ verificarAutenticacao();
 
   <script>
 
+    $(document).ready(function () {
+      // Torna as linhas da tabela selecionáveis
+      $('#tb_itens tbody').on('click', 'tr', function () {
+        $(this).toggleClass('selected');
+      });
 
+
+      // Função para excluir a linha selecionada
+      $('#btnexcluir').click(function () {
+        var selectedRow = $('#tb_itens tbody tr.selected');
+        if (selectedRow.length === 0) {
+          alert('Por favor, selecione uma linha para excluir.');
+          return;
+        }
+        var confirmDelete = confirm('Tem certeza de que deseja excluir a linha selecionada?');
+        if (confirmDelete) {
+          selectedRow.remove();
+          atualizarTotais();
+        }
+      });
+
+      $('#btnfecharvenda').click(function () {
+        if ($('#tb_itens tbody tr').length <= 0) {
+          alert("Insira produtos antes de finalizar a venda!");
+          $('#txtproduto').focus();
+        } else {
+          $('#cbforma_pagamento').prop('disabled', false);
+          $('#txtdesconto').prop('disabled', false);
+          $('#txttaxa').prop('disabled', false);
+          $('#btnconcluir').prop('disabled', false);
+          $('#txtproduto').prop('disabled', true);
+          $('#txtquantidade').prop('disabled', true);
+          $('#btnadicionar').prop('disabled', true);
+          $('#btnexcluir').prop('disabled', true);
+          $('#btnfecharvenda').prop('disabled', true);
+        }
+      });
+    });
+
+    $(document).ready(function () {
+      // Função para cancelar a venda
+      $('#btncancelar').click(function () {       
+        $('#txtcliente').prop('disabled', false).val('').focus();
+        $('#txtproduto').prop('disabled', false).val('');
+        $('#txtquantidade').prop('disabled', false).val('');
+        $('#txtvendedor').prop('disabled', false).val('');
+        $('#cbforma_pagamento').prop('disabled', true).val('');
+        $('#tb_itens tbody').empty(); // Limpa todas as linhas da tabela
+        $('#txtvalorpago').val('');
+        $('#txtdesconto').prop('disabled', true).val('');
+        $('#txttroco').val('');
+        $('#txtdinheiro').prop('disabled', true).val('');
+        $('#txtpix').prop('disabled', true).val('');
+        $('#txtcartao').prop('disabled', true).val('');
+        $('#txttaxa').prop('disabled', true).val('');
+        $('#btnadicionar').prop('disabled', false);
+        $('#btnexcluir').prop('disabled', false);
+        $('#btnfecharvenda').prop('disabled', true);
+        $('#btnconcluir').prop('disabled', true);
+        $('#lbltotalitens').text('Total de itens: ');
+        $('#lblvalortotal').text('Valor Total: ');
+      });
+    });
+
+    $(document).ready(function () {
+      contarVendas();
+    });
 
 
     $(function () {
@@ -411,7 +476,7 @@ verificarAutenticacao();
         success: function (data) {
           if (data.length > 0) {
             $("#txtvendedor").val(data[0]); // Preencher o campo com o nome do primeiro vendedor retornado
-            
+
           } else {
             // Se não houver resultados, exibir uma mensagem informando que o vendedor não foi encontrado
             alert("Vendedor não encontrado.");
@@ -427,12 +492,11 @@ verificarAutenticacao();
     }
 
 
-
-
-
-
     $("#btnadicionar").click(function () {
+
+
       var contador = 1;
+
       // Verifica se um cliente foi selecionado
       if ($("#txtcliente").val() == "") {
         alert("Selecione um Cliente!");
@@ -475,7 +539,7 @@ verificarAutenticacao();
             var produto = data[0]; // Extrai o primeiro produto do array retornado
             // Adiciona a linha à tabela
             $("#tb_itens tbody").append(
-              "<tr>" +
+              "<tr class='text-center'>" +
               "<td>" + contador++ + "</td>" + // ID
               "<td>" + produto.cod_produto + "</td>" + // Código do Produto
               "<td>" + $("#txtcliente").val() + "</td>" + // Cliente
@@ -486,13 +550,18 @@ verificarAutenticacao();
               "<td>" + $("#txtvendedor").val() + "</td>" + // Vendedor
               "<td>R$ " + (parseFloat(produto.valor_venda) * parseFloat(quantidade)).toFixed(2) + "</td>" + // Valor Total
               "</tr>"
+
             );
 
             // Limpa os campos do formulário após adicionar a linha
-            $("#txtcliente").val("");
+
+            $("#txtcliente").prop('disabled', true);
             $("#txtproduto").val("");
             $("#txtquantidade").val("");
-            $("#txtvendedor").val("");
+            $("#txtvendedor").prop('disabled', true);
+            contarVendas();
+            atualizarTotais();
+
           }
         },
         error: function () {
@@ -501,6 +570,49 @@ verificarAutenticacao();
       });
     });
 
+
+
+    function contarVendas() {
+
+      $.ajax({
+        url: 'models/buscarMaxVenda.php', // Arquivo PHP para buscar o número máximo de venda
+        method: 'GET',
+        success: function (response) {
+          var maxVenda = parseInt(response); // Converte a resposta para um número inteiro
+          if (isNaN(maxVenda)) { // Se a resposta não for um número, define o código de venda como 1
+            cod_venda = 1;
+            $("#lblnumerovenda").text("Número da venda: " + cod_venda);
+            //funcoes.cod_venda = cod_venda;
+          } else { // Caso contrário, incrementa o número máximo de venda em 1
+            cod_venda = maxVenda + 1;
+            $("#lblnumerovenda").text("Número da venda: " + cod_venda);
+            //funcoes.cod_venda = cod_venda;
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("Erro na conexão: " + error); // Exibe um erro caso haja algum problema na requisição AJAX
+        }
+      });
+    }
+
+
+    function atualizarTotais() {
+      var precoTotal = 0;
+      var totalItens = 0;
+
+      $('#tb_itens tbody tr').each(function () {
+        var quantidade = parseInt($(this).find('td:eq(4)').text());
+        var precoUnitario = parseFloat($(this).find('td:eq(6)').text().replace('R$', '').replace(',', '.'));
+
+        if (!isNaN(quantidade) && !isNaN(precoUnitario)) {
+          totalItens += quantidade;
+          precoTotal += quantidade * precoUnitario;
+        }
+      });
+
+      $('#lbltotalitens').text("Total de Itens: " + totalItens);
+      $('#lblvalortotal').text("Valor Total: " + precoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+    }
 
   </script>
 
