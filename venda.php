@@ -4,6 +4,7 @@ include_once ('models/metodos.php');
 
 // Chamada da função para verificar autenticação
 verificarAutenticacao();
+
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +16,16 @@ verificarAutenticacao();
   <title>DW Sistemas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="models/scripts.js"></script>
+
+
+
   <style>
     html,
     body {
@@ -32,6 +43,9 @@ verificarAutenticacao();
 
     .navbar {
       width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
     }
 
     .card {
@@ -85,7 +99,6 @@ verificarAutenticacao();
         </div>
       </div>
     </div>
-
     <div class="container border p-2 mt-2">
       <div class="row">
         <div class="col-12 col-md-4 mt-2">
@@ -124,8 +137,8 @@ verificarAutenticacao();
     </div>
 
     <div class="container border p-2 mt-2">
-      <div style="overflow-x: auto;">
-        <table class="table table-striped mt-3 table-hover table-bordered table-sm">
+      <div style="overflow-x: auto; overFlow-y: auto;">
+        <table class="table table-striped mt-3 table-hover table-bordered table-sm" id="tb_itens">
           <thead>
             <tr class="text-center">
               <th scope="col">ID</th>
@@ -141,28 +154,7 @@ verificarAutenticacao();
           </thead>
           <tbody>
             <!-- Aqui você pode adicionar mais linhas conforme necessário -->
-            <tr class="text-center">
-              <td>1</td>
-              <td>123</td>
-              <td>Cliente A</td>
-              <td>Produto X</td>
-              <td>5</td>
-              <td>Categoria A</td>
-              <td>R$ 10.00</td>
-              <td>Vendedor 1</td>
-              <td>R$ 50.00</td>
-            </tr>
-            <tr class="text-center">
-              <td>2</td>
-              <td>456</td>
-              <td>Cliente B</td>
-              <td>Produto Y</td>
-              <td>3</td>
-              <td>Categoria B</td>
-              <td>R$ 15.00</td>
-              <td>Vendedor 2</td>
-              <td>R$ 45.00</td>
-            </tr>
+
             <!-- Adicione mais linhas conforme necessário -->
           </tbody>
         </table>
@@ -232,11 +224,13 @@ verificarAutenticacao();
       </div>
     </div>
   </div>
+  </form>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="models/scripts.js"></script>
+
+
   <script>
     // Converte o campo de entrada para formato de moeda
     var inputs = document.getElementsByClassName('moeda');
@@ -248,6 +242,269 @@ verificarAutenticacao();
       });
     }
   </script>
+
+
+  <script>
+
+
+
+
+    $(function () {
+      // Inicializa o plugin de autocompletar para o campo de entrada do cliente
+      $("#txtcliente").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarclientes.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+
+      var ultimoValorCliente = ""; // Variável para armazenar o último valor do campo de entrada
+
+      // Adiciona um evento de perda de foco ao campo de entrada do cliente
+      $("#txtcliente").on("blur", function () {
+        var valorAtualCliente = $(this).val().trim(); // Obter o valor atual do campo de entrada
+
+        // Verificar se o campo de pesquisa está vazio ou se o valor não mudou significativamente
+        if (valorAtualCliente !== "" && valorAtualCliente !== ultimoValorCliente) {
+          buscarClientes(); // Chama a função buscarClientes apenas se o campo não estiver vazio e houver uma mudança no valor
+          ultimoValorCliente = valorAtualCliente; // Atualiza o último valor do campo de entrada
+        }
+      });
+
+      // Inicializa o plugin de autocompletar para o campo de entrada do produto
+      $("#txtproduto").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarprodutos.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+
+      var ultimoValorProduto = ""; // Variável para armazenar o último valor do campo de entrada
+
+      // Adiciona um evento de perda de foco ao campo de entrada do produto
+      $("#txtproduto").on("blur", function () {
+        var valorAtualProduto = $(this).val().trim(); // Obter o valor atual do campo de entrada
+
+        // Verificar se o campo de pesquisa está vazio ou se o valor não mudou significativamente
+        if (valorAtualProduto !== "" && valorAtualProduto !== ultimoValorProduto) {
+          buscarProdutos(); // Chama a função buscarProdutos apenas se o campo não estiver vazio e houver uma mudança no valor
+          ultimoValorProduto = valorAtualProduto; // Atualiza o último valor do campo de entrada
+        }
+      });
+
+      // Inicializa o plugin de autocompletar para o campo de entrada do vendedor
+      $("#txtvendedor").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarfuncionario.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+
+      var ultimoValorVendedor = ""; // Variável para armazenar o último valor do campo de entrada
+
+      // Adiciona um evento de perda de foco ao campo de entrada do vendedor
+      $("#txtvendedor").on("blur", function () {
+        var valorAtualVendedor = $(this).val().trim(); // Obter o valor atual do campo de entrada
+
+        // Verificar se o campo de pesquisa está vazio ou se o valor não mudou significativamente
+        if (valorAtualVendedor !== "" && valorAtualVendedor !== ultimoValorVendedor) {
+          buscarVendedores(); // Chama a função buscarVendedores apenas se o campo não estiver vazio e houver uma mudança no valor
+          ultimoValorVendedor = valorAtualVendedor; // Atualiza o último valor do campo de entrada
+        }
+      });
+    });
+
+    function buscarClientes() {
+      var pesquisa = $("#txtcliente").val().trim(); // Obter o valor do input de pesquisa e remover espaços em branco
+
+      // Fazer a requisição AJAX para buscar os clientes
+      $.ajax({
+        url: "models/buscarclientes.php",
+        dataType: "json",
+        data: {
+          term: pesquisa
+        },
+        success: function (data) {
+          if (data.length > 0) {
+            $("#txtcliente").val(data[0]); // Preencher o campo com o nome do primeiro cliente retornado
+            $("#txtproduto").focus(); // Transferir o foco para o próximo campo
+          } else {
+            // Se não houver resultados, exibir uma mensagem informando que o cliente não foi encontrado
+            alert("Cliente não encontrado.");
+            $("#txtcliente").val(""); // Limpar o campo de entrada
+            $("#txtcliente").focus(); // Manter o foco no campo de entrada para nova pesquisa
+          }
+        },
+        error: function () {
+          // Em caso de erro na requisição AJAX, exibir uma mensagem de erro
+          alert("Erro ao buscar clientes.");
+        }
+      });
+    }
+
+    function buscarProdutos() {
+      var pesquisa = $("#txtproduto").val().trim(); // Obter o valor do input de pesquisa e remover espaços em branco
+
+      // Fazer a requisição AJAX para buscar os produtos
+      $.ajax({
+        url: "models/buscarprodutos.php",
+        dataType: "json",
+        data: {
+          term: pesquisa
+        },
+        success: function (data) {
+          if (data.length > 0) {
+            $("#txtproduto").val(data[0]); // Preencher o campo com o nome do primeiro produto retornado
+            $("#txtquantidade").focus(); // Transferir o foco para o próximo campo
+          } else {
+            // Se não houver resultados, exibir uma mensagem informando que o produto não foi encontrado
+            alert("Produto não encontrado.");
+            $("#txtproduto").val(""); // Limpar o campo de entrada
+            $("#txtproduto").focus(); // Manter o foco no campo de entrada para nova pesquisa
+          }
+        },
+        error: function () {
+          // Em caso de erro na requisição AJAX, exibir uma mensagem de erro
+          alert("Erro ao buscar produtos.");
+        }
+      });
+    }
+
+    function buscarVendedores() {
+
+      var pesquisa = $("#txtvendedor").val().trim(); // Obter o valor do input de pesquisa e remover espaços em branco
+
+      // Fazer a requisição AJAX para buscar os vendedores
+      $.ajax({
+        url: "models/buscarfuncionario.php",
+        dataType: "json",
+        data: {
+          term: pesquisa
+        },
+        success: function (data) {
+          if (data.length > 0) {
+            $("#txtvendedor").val(data[0]); // Preencher o campo com o nome do primeiro vendedor retornado
+            
+          } else {
+            // Se não houver resultados, exibir uma mensagem informando que o vendedor não foi encontrado
+            alert("Vendedor não encontrado.");
+            $("#txtvendedor").val(""); // Limpar o campo de entrada
+            $("#txtvendedor").focus(); // Manter o foco no campo de entrada para nova pesquisa
+          }
+        },
+        error: function () {
+          // Em caso de erro na requisição AJAX, exibir uma mensagem de erro
+          alert("Erro ao buscar vendedores.");
+        }
+      });
+    }
+
+
+
+
+
+
+    $("#btnadicionar").click(function () {
+      var contador = 1;
+      // Verifica se um cliente foi selecionado
+      if ($("#txtcliente").val() == "") {
+        alert("Selecione um Cliente!");
+        $("#txtcliente").focus();
+        return;
+      }
+
+      // Verifica se um produto foi selecionado
+      if ($("#txtproduto").val() == "") {
+        alert("Selecione um produto!");
+        $("#txtproduto").focus();
+        return;
+      }
+
+      // Verifica se a quantidade é válida
+      var quantidade = $("#txtquantidade").val();
+      if ($.trim(quantidade) === "" || isNaN(quantidade) || parseFloat(quantidade) <= 0) {
+        alert("Escolha uma quantidade válida para o produto");
+        $("#txtquantidade").focus();
+        return;
+      }
+
+      // Verifica se um vendedor foi selecionado
+      if ($("#txtvendedor").val() == "") {
+        alert("Selecione um vendedor");
+        $("#txtvendedor").focus();
+        return;
+      }
+
+      $.ajax({
+        url: "models/inserirprodutos.php",
+        dataType: "json",
+        data: {
+          term: $("#txtproduto").val()
+        },
+        success: function (data) {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            var produto = data[0]; // Extrai o primeiro produto do array retornado
+            // Adiciona a linha à tabela
+            $("#tb_itens tbody").append(
+              "<tr>" +
+              "<td>" + contador++ + "</td>" + // ID
+              "<td>" + produto.cod_produto + "</td>" + // Código do Produto
+              "<td>" + $("#txtcliente").val() + "</td>" + // Cliente
+              "<td>" + produto.nome_produto + "</td>" + // Produto
+              "<td>" + quantidade + "</td>" + // Quantidade
+              "<td>" + produto.categoria_produto + "</td>" + // Categoria
+              "<td>R$ " + produto.valor_venda + "</td>" + // Preço Unitário
+              "<td>" + $("#txtvendedor").val() + "</td>" + // Vendedor
+              "<td>R$ " + (parseFloat(produto.valor_venda) * parseFloat(quantidade)).toFixed(2) + "</td>" + // Valor Total
+              "</tr>"
+            );
+
+            // Limpa os campos do formulário após adicionar a linha
+            $("#txtcliente").val("");
+            $("#txtproduto").val("");
+            $("#txtquantidade").val("");
+            $("#txtvendedor").val("");
+          }
+        },
+        error: function () {
+          alert("Erro ao buscar dados do produto");
+        }
+      });
+    });
+
+
+  </script>
+
+
 
 
 </body>

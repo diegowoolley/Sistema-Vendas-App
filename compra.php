@@ -15,6 +15,15 @@ verificarAutenticacao();
   <title>DW Sistemas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="models/scripts.js"></script>
+
+
   <style>
     html,
     body {
@@ -32,6 +41,9 @@ verificarAutenticacao();
 
     .navbar {
       width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
     }
 
     .card {
@@ -237,7 +249,9 @@ verificarAutenticacao();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+
   <script src="models/scripts.js"></script>
+
   <script>
     // Converte o campo de entrada para formato de moeda
     var inputs = document.getElementsByClassName('moeda');
@@ -248,6 +262,56 @@ verificarAutenticacao();
         this.value = valor;
       });
     }
+  </script>
+
+  <script>
+    $(function () {
+      $("#txtfornecedor").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarfornecedor.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+      $("#txtproduto").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarprodutos.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+      $("#txtvendedor").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "models/buscarfuncionario.php",
+            dataType: "json",
+            data: {
+              term: request.term
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        minLength: 2
+      });
+    });
   </script>
 
 </body>
