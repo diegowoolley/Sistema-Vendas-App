@@ -173,7 +173,7 @@ verificarAutenticacao();
         <div class="col-12 col-md-6 text-center">
           <label class="form-label">Forma de Pagamento:</label>
           <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;"
-            id="cbforma_pagamento">
+            id="cbforma_pagamento" disabled>
             <option selected>Selecione...</option>
             <option value="1">Dinheiro</option>
             <option value="2">Cartão de Crédito</option>
@@ -185,12 +185,12 @@ verificarAutenticacao();
         <div class="col-12 col-md-6 text-center">
           <label class="form-label">Valor Pago:</label>
           <div class="input-group mx-auto" style="width: 10rem;">
-            <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago">
+            <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago" disabled>
           </div>
           <div class="col-12">
             <label class="form-label">Vencimento:</label>
             <div class="input-group mx-auto" style="width: 10rem;">
-              <input type="date" class="form-control moeda" aria-label="Valor Pago" id="txttroco">
+              <input type="date" class="form-control moeda" aria-label="Vencimento" id="txtvencimento" disabled>
             </div>
           </div>
         </div>
@@ -199,23 +199,25 @@ verificarAutenticacao();
       <div class="row justify-content-center">
         <div class="col-md-2">
           <label class="form-label">Dinheiro:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00">
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtdinheiro" placeholder="0.00"
+            disabled>
         </div>
         <div class="col-md-2">
           <label class="form-label">Pix:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00">
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtpix" placeholder="0.00" disabled>
         </div>
         <div class="col-md-2">
           <label class="form-label">Cartão:</label>
-          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00">
+          <input type="text" class="form-control moeda" style="width: 10rem;" id="txtcartao" placeholder="0.00"
+            disabled>
         </div>
         <div class="col-md-2">
           <label class="form-label">Desconto:</label>
-          <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%">
+          <input type="text" class="form-control" style="width: 10rem;" id="txtdesconto" placeholder="0%" disabled>
         </div>
         <div class="col-md-2">
           <label class="form-label">Taxa:</label>
-          <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%">
+          <input type="text" class="form-control" style="width: 10rem;" id="txttaxa" placeholder="0%" disabled>
         </div>
       </div>
     </div>
