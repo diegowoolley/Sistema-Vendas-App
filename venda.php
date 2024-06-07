@@ -71,6 +71,38 @@ verificarAutenticacao();
       font-size: 0.9em;
 
     }
+
+    .table-container {
+      overflow-y: auto;
+      max-height: 150px;
+      position: relative;
+    }
+
+    .table-container table {
+      width: 100%;
+      margin: 0;
+    }
+
+    .table-container thead tr {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .table-wrapper {
+        margin-left: -15px;
+      }
+
+      .table-container thead tr {
+        font-size: 6px;
+      }
+
+      .table-container tbody tr {
+        font-size: 6px;
+      }
+    }
   </style>
 </head>
 
@@ -136,27 +168,25 @@ verificarAutenticacao();
       </div>
     </div>
 
-    <div class="table-container border p-2 mt-2" style="overflow-y: scroll; max-height: 150px;">
-      <div style="overflow-x: auto;">
-        <table class="table table-primary table-striped mt-3 table table-hover table-bordered table-sm" id="tb_itens">
-          <thead>
-            <tr class="text-center">
-              <th scope="col">ID</th>
-              <th scope="col">Código do Produto</th>
-              <th scope="col">Cliente</th>
-              <th scope="col">Produto</th>
-              <th scope="col">Quantidade</th>
-              <th scope="col">Categoria</th>
-              <th scope="col">Preço Unitário</th>
-              <th scope="col">Vendedor</th>
-              <th scope="col">Valor Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Aqui você pode adicionar mais linhas conforme necessário -->
-          </tbody>
-        </table>
-      </div>
+    <div class="table-container border p-5 mt-6 mb-2">
+      <table class="table table-primary table-striped table-hover table-bordered table-sm" id="tb_itens">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">ID</th>
+            <th scope="col">Código do Produto</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Preço Unitário</th>
+            <th scope="col">Vendedor</th>
+            <th scope="col">Valor Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Adicione mais linhas conforme necessário -->
+        </tbody>
+      </table>
     </div>
 
     <div class="container border p-2 mt-2">
@@ -297,8 +327,6 @@ verificarAutenticacao();
         }
       });
     });
-
-
 
     $(function () {
       // Inicializa o plugin de autocompletar para o campo de entrada do cliente
@@ -580,11 +608,11 @@ verificarAutenticacao();
           var maxVenda = parseInt(response); // Converte a resposta para um número inteiro
           if (isNaN(maxVenda)) { // Se a resposta não for um número, define o código de venda como 1
             cod_venda = 1;
-            $("#lblnumerovenda").text("Número da venda: " + cod_venda);
+            $("#lblnumerovenda").text("Número da Venda: " + cod_venda);
             //funcoes.cod_venda = cod_venda;
           } else { // Caso contrário, incrementa o número máximo de venda em 1
             cod_venda = maxVenda + 1;
-            $("#lblnumerovenda").text("Número da venda: " + cod_venda);
+            $("#lblnumerovenda").text("Número da Venda: " + cod_venda);
             //funcoes.cod_venda = cod_venda;
           }
         },
@@ -722,11 +750,6 @@ verificarAutenticacao();
         calcularValorVendaFracionada();
       });
     });
-
-
-
-
-
 
 
 
