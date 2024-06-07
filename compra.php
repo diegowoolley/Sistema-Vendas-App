@@ -135,9 +135,10 @@ verificarAutenticacao();
       </div>
     </div>
 
-    <div class="container border p-2 mt-2">
+    <div class="table-container border p-2 mt-2">
       <div style="overflow-x: auto;">
-        <table class="table table-striped mt-3 table-hover table-bordered table-sm">
+        <table class="table table-striped mt-3 table-hover table-bordered table-sm"
+          id="tb_itens">
           <thead>
             <tr class="text-center">
               <th scope="col">ID</th>

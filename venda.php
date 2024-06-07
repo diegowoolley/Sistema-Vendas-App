@@ -83,24 +83,17 @@ verificarAutenticacao();
       margin: 0;
     }
 
-    .table-container thead tr {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      z-index: 1;
-    }
-
     @media (max-width: 768px) {
       .table-wrapper {
-        margin-left: -15px;
+        margin-left: -30px;
       }
 
       .table-container thead tr {
-        font-size: 6px;
+        font-size: 12px;
       }
 
       .table-container tbody tr {
-        font-size: 6px;
+        font-size: 12px;
       }
     }
   </style>
