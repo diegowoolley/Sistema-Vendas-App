@@ -251,7 +251,7 @@ verificarAutenticacao();
       // Função para cancelar a venda
       $('#btncancelar').click(function () {
         // Atualiza a página
-        location.reload();       
+        location.reload();
       });
     });
 
@@ -479,8 +479,6 @@ verificarAutenticacao();
 
 
     $("#btnadicionar").click(function () {
-
-
       var contador = 1;
 
       // Verifica se um cliente foi selecionado
@@ -523,31 +521,46 @@ verificarAutenticacao();
             alert(data.error);
           } else {
             var produto = data[0]; // Extrai o primeiro produto do array retornado
-            // Adiciona a linha à tabela
-            $("#tb_itens tbody").append(
-              "<tr class='text-center'>" +
-              "<td>" + contador++ + "</td>" + // ID
-              "<td>" + produto.cod_produto + "</td>" + // Código do Produto
-              "<td>" + $("#txtcliente").val() + "</td>" + // Cliente
-              "<td>" + produto.nome_produto + "</td>" + // Produto
-              "<td>" + quantidade + "</td>" + // Quantidade
-              "<td>" + produto.categoria_produto + "</td>" + // Categoria
-              "<td>R$ " + produto.valor_venda + "</td>" + // Preço Unitário
-              "<td>" + $("#txtvendedor").val() + "</td>" + // Vendedor
-              "<td>R$ " + (parseFloat(produto.valor_venda) * parseFloat(quantidade)).toFixed(2) + "</td>" + // Valor Total
-              "</tr>"
 
-            );
+            // Verificar se o produto já está na tabela
+            var produtoExistente = false;
+            $("#tb_itens tbody tr").each(function () {
+              if ($(this).find("td:eq(3)").text() === produto.nome_produto) {
+                // Produto já está na tabela, atualizar quantidade e valor total
+                var novaQuantidade = parseFloat($(this).find("td:eq(4)").text()) + parseFloat(quantidade);
+                $(this).find("td:eq(4)").text(novaQuantidade);
+                var valorUnitario = parseFloat(produto.valor_venda.replace("R$ ", ""));
+                var valorTotal = novaQuantidade * valorUnitario;
+                $(this).find("td:eq(8)").text("R$ " + valorTotal.toFixed(2));
+                produtoExistente = true;
+                return false; // Sair do loop
+              }
+            });
+
+            if (!produtoExistente) {
+              // Adiciona a linha à tabela
+              $("#tb_itens tbody").append(
+                "<tr class='text-center'>" +
+                "<td>" + contador++ + "</td>" + // ID
+                "<td>" + produto.cod_produto + "</td>" + // Código do Produto
+                "<td>" + $("#txtcliente").val() + "</td>" + // Cliente
+                "<td>" + produto.nome_produto + "</td>" + // Produto
+                "<td>" + quantidade + "</td>" + // Quantidade
+                "<td>" + produto.categoria_produto + "</td>" + // Categoria
+                "<td>" + produto.valor_venda + "</td>" + // Preço Unitário
+                "<td>" + $("#txtvendedor").val() + "</td>" + // Vendedor
+                "<td>R$ " + (parseFloat(produto.valor_venda.replace("R$ ", "")) * parseFloat(quantidade)).toFixed(2) + "</td>" + // Valor Total
+                "</tr>"
+              );
+            }
 
             // Limpa os campos do formulário após adicionar a linha
-
-            $("#txtcliente").prop('disabled', true);
+            $("#txtcliente").prop("disabled", true);
             $("#txtproduto").val("").focus();
             $("#txtquantidade").val("");
-            $("#txtvendedor").prop('disabled', true);
+            $("#txtvendedor").prop("disabled", true);
             contarVendas();
             atualizarTotais();
-
           }
         },
         error: function () {
@@ -657,6 +670,59 @@ verificarAutenticacao();
         }
       });
     });
+
+
+
+    $(document).ready(function () {
+      // Função para calcular o valor da venda fracionada
+      function calcularValorVendaFracionada() {
+        // Verificar se o elemento #lblvalortotal existe
+        var valorTotalTexto = $("#lblvalortotal").text().trim();
+        if (valorTotalTexto !== "") {
+          // Remover "Valor Total: R$" do texto e converter para número
+          var valorTotalNumerico = parseFloat(valorTotalTexto.replace("Valor Total: R$", "").trim());
+          console.log(valorTotalNumerico);
+          // Verificar se o valor é um número válido
+          if (!isNaN(valorTotalNumerico)) {
+            // Pegar os valores dos campos
+            var dinheiro = parseFloat($('#txtdinheiro').val().trim()) || 0;
+            var pix = parseFloat($('#txtpix').val().trim()) || 0;
+            var cartao = parseFloat($('#txtcartao').val().trim()) || 0;
+            var descontos = parseFloat($('#txtdesconto').val().replace("%", "")) || 0;
+            var taxa = parseFloat($('#txttaxa').val().replace("%", "")) || 0;
+
+            // Calcular soma fracionada
+            var somaFracionado = dinheiro + pix + cartao;
+
+            // Calcular descontos
+            var valorDescontos = valorTotalNumerico * (descontos / 100);
+
+            // Calcular valor com descontos
+            var valorComDescontos = valorTotalNumerico - valorDescontos;
+
+            // Calcular taxa sobre o valor com descontos
+            var resultadoFracionado = valorComDescontos * (1 + (taxa / 100));
+
+            // Calcular troco com descontos e taxas
+            var troco = somaFracionado - resultadoFracionado;
+
+            // Atualizar campos
+            if (resultadoFracionado > valorTotalNumerico) {
+              $('#txttroco').val("R$ 0,00");
+            } else {
+              $('#txttroco').val(troco.toFixed(2));
+            }
+            $('#txtvalorpago').val(resultadoFracionado.toFixed(2));
+          }
+        }
+      }
+
+      // Chamar a função calcularValorVendaFracionada() nos eventos de saída (blur) dos campos
+      $('#txtdinheiro, #txtpix, #txtcartao, #txtdesconto, #txttaxa').on('blur', function () {
+        calcularValorVendaFracionada();
+      });
+    });
+
 
 
 
