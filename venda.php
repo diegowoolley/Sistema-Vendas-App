@@ -171,18 +171,19 @@ verificarAutenticacao();
             <option value="3">Cartão de Débito</option>
             <option value="4">Pix</option>
             <option value="5">Crédito Cliente</option>
+            <option value="6">Fracionado</option>
           </select>
         </div>
         <div class="col-12 col-md-4 mb-3 text-center">
           <label class="form-label">Valor Pago:</label>
           <div class="input-group mx-auto" style="width: 10rem;">
-            <input type="text" class="form-control moeda" aria-label="Valor Pago" id="txtvalor_pago" disabled>
+            <input type="text" class="form-control" aria-label="Valor Pago" id="txtvalorpago" disabled>
           </div>
         </div>
         <div class="col-12 col-md-4 mb-4 text-center">
           <label class="form-label">Troco:</label>
           <div class="input-group mx-auto" style="width: 10rem;">
-            <input type="text" class="form-control moeda" aria-label="troco" id="txtvencimento" disabled>
+            <input type="text" class="form-control" aria-label="troco" id="txttroco" disabled>
           </div>
         </div>
       </div>
@@ -245,6 +246,19 @@ verificarAutenticacao();
 
   <script>
 
+
+    $(document).ready(function () {
+      // Função para cancelar a venda
+      $('#btncancelar').click(function () {
+        // Atualiza a página
+        location.reload();       
+      });
+    });
+
+    $(document).ready(function () {
+      contarVendas();
+    });
+
     $(document).ready(function () {
       // Torna as linhas da tabela selecionáveis
       $('#tb_itens tbody').on('click', 'tr', function () {
@@ -284,34 +298,6 @@ verificarAutenticacao();
       });
     });
 
-    $(document).ready(function () {
-      // Função para cancelar a venda
-      $('#btncancelar').click(function () {       
-        $('#txtcliente').prop('disabled', false).val('').focus();
-        $('#txtproduto').prop('disabled', false).val('');
-        $('#txtquantidade').prop('disabled', false).val('');
-        $('#txtvendedor').prop('disabled', false).val('');
-        $('#cbforma_pagamento').prop('disabled', true).val('');
-        $('#tb_itens tbody').empty(); // Limpa todas as linhas da tabela
-        $('#txtvalorpago').val('');
-        $('#txtdesconto').prop('disabled', true).val('');
-        $('#txttroco').val('');
-        $('#txtdinheiro').prop('disabled', true).val('');
-        $('#txtpix').prop('disabled', true).val('');
-        $('#txtcartao').prop('disabled', true).val('');
-        $('#txttaxa').prop('disabled', true).val('');
-        $('#btnadicionar').prop('disabled', false);
-        $('#btnexcluir').prop('disabled', false);
-        $('#btnfecharvenda').prop('disabled', true);
-        $('#btnconcluir').prop('disabled', true);
-        $('#lbltotalitens').text('Total de itens: ');
-        $('#lblvalortotal').text('Valor Total: ');
-      });
-    });
-
-    $(document).ready(function () {
-      contarVendas();
-    });
 
 
     $(function () {
@@ -556,7 +542,7 @@ verificarAutenticacao();
             // Limpa os campos do formulário após adicionar a linha
 
             $("#txtcliente").prop('disabled', true);
-            $("#txtproduto").val("");
+            $("#txtproduto").val("").focus();
             $("#txtquantidade").val("");
             $("#txtvendedor").prop('disabled', true);
             contarVendas();
@@ -613,6 +599,70 @@ verificarAutenticacao();
       $('#lbltotalitens').text("Total de Itens: " + totalItens);
       $('#lblvalortotal').text("Valor Total: " + precoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
     }
+
+
+    $(document).ready(function () {
+      $('#cbforma_pagamento').change(function () {
+        var cbformapagamentoIndex = parseInt($(this).val()); // Convertendo para número inteiro
+        console.log("Índice da forma de pagamento selecionada:", cbformapagamentoIndex);
+
+        var valor_total_texto = $("#lblvalortotal").text();
+        console.log("Texto do valor total:", valor_total_texto);
+
+        var valor_total_sem_texto = valor_total_texto.trim().replace("Valor Total: R$", "");
+        console.log("Valor total sem texto:", valor_total_sem_texto);
+
+        var valor_total = parseFloat(valor_total_sem_texto.trim());
+        console.log("Valor total convertido para número:", valor_total);
+
+        function formatarMoeda(valor) {
+          return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        if (cbformapagamentoIndex === 5 || cbformapagamentoIndex === 6) {
+          $('#txtvalorpago').val("");
+          $('#txtdesconto').val("");
+          $('#txttaxa').val("");
+          $('#txtdinheiro').prop('disabled', false).val("").focus();
+          $('#txtpix').prop('disabled', false).val("");
+          $('#txtcartao').prop('disabled', false).val("");
+          $('#txttroco').val('');
+        } else if (cbformapagamentoIndex === 1) {
+          $('#txtvalorpago').val(formatarMoeda(valor_total));
+          $('#txtdinheiro').prop('disabled', true).val(formatarMoeda(valor_total));
+          $('#txtpix').prop('disabled', true).val("");
+          $('#txtcartao').prop('disabled', true).val("");
+          $('#txttaxa').val("");
+          $('#txtdesconto').val("");
+          $('#txttroco').val('');
+          $('#txtdesconto').focus();
+        } else if (cbformapagamentoIndex === 4) {
+          $('#txtvalorpago').val(formatarMoeda(valor_total));
+          $('#txtdinheiro').prop('disabled', true).val("");
+          $('#txtpix').prop('disabled', true).val(formatarMoeda(valor_total));
+          $('#txtcartao').prop('disabled', true).val("");
+          $('#txttaxa').val("");
+          $('#txtdesconto').val("");
+          $('#txttroco').val('');
+          $('#txtdesconto').focus();
+        } else if (cbformapagamentoIndex === 2 || cbformapagamentoIndex === 3) {
+          $('#txtvalorpago').val(formatarMoeda(valor_total));
+          $('#txtdinheiro').prop('disabled', true).val("");
+          $('#txtpix').prop('disabled', true).val("");
+          $('#txtcartao').prop('disabled', true).val(formatarMoeda(valor_total));
+          $('#txttaxa').val("");
+          $('#txtdesconto').val("");
+          $('#txttroco').val('');
+          $('#txtdesconto').focus();
+        }
+      });
+    });
+
+
+
+
+
+
 
   </script>
 
