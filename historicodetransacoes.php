@@ -5,6 +5,25 @@ include_once ('models/metodos.php');
 // Chamada da função para verificar autenticação
 verificarAutenticacao();
 ?>
+
+<?php
+
+if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
+  $codigoEmpresa = $_SESSION['codigoEmpresa'];
+  $nomeEmpresa = $_SESSION['nomeEmpresa'];
+
+  // Definindo variáveis globais
+  $GLOBALS['codigoEmpresaGlobal'] = $codigoEmpresa;
+  $GLOBALS['nomeEmpresaGlobal'] = $nomeEmpresa;
+
+  //echo "Código da Empresa Selecionada: " . htmlspecialchars($codigoEmpresa) . "<br>";
+  //echo "Nome da Empresa Selecionada: " . htmlspecialchars($nomeEmpresa) . "<br>";
+} else {
+  echo "Nenhuma empresa foi selecionada.";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -79,7 +98,7 @@ verificarAutenticacao();
           if (isset($_GET['buscartransacoes']) && $_GET['buscartransacoes'] !== '') {
               buscarTransacoes();
           } else {
-              listartrasaçoes();
+            listartransacoes();
           };
 
           ?>

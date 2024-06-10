@@ -4,8 +4,6 @@ include_once ('models/metodos.php');
 
 // Chamada da função para verificar autenticação
 verificarAutenticacao();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -743,6 +741,8 @@ verificarAutenticacao();
         calcularValorVendaFracionada();
       });
     });
+
+
 
 
 

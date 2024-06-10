@@ -27,4 +27,4 @@ if (isset($_GET['term'])) {
     $stmt->close();
     $conn->close();
 }
-?>
+

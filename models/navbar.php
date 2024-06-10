@@ -57,9 +57,15 @@ class NavBar
                         </li>
                         </li>
                     </ul>
-                </div>              
+                </div>
             </div>
         </nav>
+        <script>
+            function logout() {
+                // Redireciona para a função de logout em PHP
+                window.location.href = 'models/metodos.php?action=logout';
+            }</script>
+
         <?php
     }
 

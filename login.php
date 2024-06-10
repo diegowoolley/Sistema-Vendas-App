@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
 
 
                     // Redireciona para a página index.php
-                    header("Location: index.php");
+                    header("Location: escolhaempresa.php");
                     exit;
                 } else {
                     // Mensagem de erro

@@ -1,11 +1,26 @@
 <?php
+
+
 function vendashoje()
 {
     include 'models/conexao.php';
     $conn = conectarBanco(); // Conecta ao banco de dados
 
-    $sql = "SELECT cod_venda, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND data = CURDATE()";
-    $result = $conn->query($sql); // Executa a consulta SQL
+    global $codigoEmpresaGlobal;
+
+    $sql = "SELECT * FROM caixa WHERE cod_empresa = ? AND (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND data = CURDATE()";
+
+    // Prepara a consulta
+    $stmt = $conn->prepare($sql);
+
+    // Vincula o parâmetro
+    $stmt->bind_param("i", $codigoEmpresaGlobal); // "i" indica que é um parâmetro inteiro
+
+    // Executa a consulta
+    $stmt->execute();
+
+    // Obtém os resultados
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // Exibe os dados na tabela
@@ -30,13 +45,27 @@ function vendashoje()
 
 function listarprodutos()
 {
-
     include 'models/conexao.php';
     $conn = conectarBanco(); // Conecta ao banco de dados
 
-    $sql = "SELECT cod_produto, nome_produto, categoria_produto, valor_venda FROM cad_produtos";
-    $result = $conn->query($sql); // Executa a consulta SQL
+    global $codigoEmpresaGlobal;
 
+    // Consulta SQL para listar os produtos da empresa específica
+    $sql = "SELECT * FROM cad_produtos WHERE cod_empresa = ?";
+
+    // Prepara a consulta
+    $stmt = $conn->prepare($sql);
+
+    // Vincula o parâmetro
+    $stmt->bind_param("i", $codigoEmpresaGlobal); // "i" indica que é um parâmetro inteiro
+
+    // Executa a consulta
+    $stmt->execute();
+
+    // Obtém os resultados
+    $result = $stmt->get_result();
+
+    // Verifica se há resultados
     if ($result->num_rows > 0) {
         // Exibe os dados na tabela
         while ($row = $result->fetch_assoc()) {
@@ -50,19 +79,37 @@ function listarprodutos()
     } else {
         echo "<tr><td colspan='4'>Nenhum registro encontrado</td></tr>";
     }
-    $conn->close(); // Fecha a conexão com o banco de dados
+
+    // Fecha a conexão com o banco de dados
+    $stmt->close();
+    $conn->close();
 }
 
 
-function listartrasaçoes()
+function listartransacoes()
 {
     include 'models/conexao.php';
 
+    global $codigoEmpresaGlobal;
+
     $conn = conectarBanco(); // Conecta ao banco de dados
 
-    $sql = "SELECT cod_venda, tipo, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status FROM caixa WHERE DATE(data) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
+    $sql = "SELECT cod_venda, tipo, cliente, vendedor, valor_pago, valor_total, forma_pagamento, desconto, taxa, status 
+            FROM caixa 
+            WHERE cod_empresa = ? 
+            AND DATE(data) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
 
-    $result = $conn->query($sql); // Executa a consulta SQL
+    // Prepara a consulta
+    $stmt = $conn->prepare($sql);
+
+    // Vincula o parâmetro
+    $stmt->bind_param("i", $codigoEmpresaGlobal); // "i" indica que é um parâmetro inteiro
+
+    // Executa a consulta
+    $stmt->execute();
+
+    // Obtém os resultados
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         // Exibe os dados na tabela
@@ -83,8 +130,10 @@ function listartrasaçoes()
     } else {
         echo "<tr><td colspan='10'>Nenhum registro encontrado</td></tr>";
     }
-    $conn->close(); // Fecha a conexão com o banco de dados
 
+    // Fecha a conexão com o banco de dados
+    $stmt->close();
+    $conn->close();
 }
 
 // Função para verificar se o usuário está autenticado
@@ -105,11 +154,14 @@ function fazerLogout()
     // Inicie ou retome a sessão
     session_start();
 
-    // Destrua todas as variáveis de sessão
+    // Remova todas as variáveis de sessão
+    $_SESSION = array();
+
+    // Destrua a sessão
     session_destroy();
 
     // Redirecione para a página de login
-    header("Location: ../login.php"); // Caminho atualizado para garantir o redirecionamento correto
+    header("Location: ../login.php");
     exit;
 }
 
@@ -120,6 +172,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 function buscarProdutos()
 {
+    global $codigoEmpresaGlobal;
+
     include 'models/conexao.php';
     $con = conectarBanco();
     echo "<script>document.getElementById('tb_produto').innerHTML = 
@@ -141,12 +195,11 @@ function buscarProdutos()
     </script>";
     if (isset($_GET['buscarprodutos'])) {
         $pesquisa = mysqli_real_escape_string($con, $_GET['buscarprodutos']); // Escapa a string de busca
-        $sql = "SELECT * FROM cad_produtos WHERE cod_produto LIKE '%" . $pesquisa . "%' OR nome_produto LIKE '%" . $pesquisa . "%'";
+        $sql = "SELECT * FROM cad_produtos WHERE cod_empresa = '{$codigoEmpresaGlobal}' AND (cod_produto LIKE '%" . $pesquisa . "%' OR nome_produto LIKE '%" . $pesquisa . "%')";
         $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
 
         if ($sql_query->num_rows > 0) {
             // Loop através dos resultados
-
             while ($row = $sql_query->fetch_assoc()) {
                 echo "<tr class='text-center'>";
                 echo "<td>" . $row["cod_produto"] . "</td>";
@@ -161,8 +214,11 @@ function buscarProdutos()
     }
 }
 
+
 function buscarTransacoes()
 {
+    global $codigoEmpresaGlobal;
+
     include 'models/conexao.php';
     $con = conectarBanco();
     echo "<script>document.getElementById('tb_produto').innerHTML = 
@@ -190,7 +246,7 @@ function buscarTransacoes()
 </script>";
     if (isset($_GET['buscartransacoes'])) {
         $pesquisa = mysqli_real_escape_string($con, $_GET['buscartransacoes']); // Escapa a string de busca
-        $sql = "SELECT * FROM caixa WHERE cod_venda LIKE '%" . $pesquisa . "%' OR cliente LIKE '%" . $pesquisa . "%'";
+        $sql = "SELECT * FROM caixa WHERE cod_empresa = '{$codigoEmpresaGlobal}' AND (cod_venda LIKE '%" . $pesquisa . "%' OR cliente LIKE '%" . $pesquisa . "%')";
         $sql_query = $con->query($sql) or die("Erro ao Consultar: " . $con->error); // Executa a consulta SQL
 
         if ($sql_query->num_rows > 0) {
@@ -253,7 +309,7 @@ function buscarvendas()
 
             while ($row = $sql_query->fetch_assoc()) {
                 echo "<tr class='text-center'>";
-                echo "<td>" . $row['cod_venda'] . "</td>";           
+                echo "<td>" . $row['cod_venda'] . "</td>";
                 echo "<td>" . $row['cliente'] . "</td>";
                 echo "<td>" . $row['vendedor'] . "</td>";
                 echo "<td>R$ " . number_format($row['valor_pago'], 2, ',', '.') . "</td>";
@@ -269,4 +325,3 @@ function buscarvendas()
         }
     }
 }
-?>
