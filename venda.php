@@ -712,54 +712,51 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
 
 
 
-    $(document).ready(function () {
-      // Função para calcular o valor da venda fracionada
-      function calcularValorVendaFracionada() {
-        // Verificar se o elemento #lblvalortotal existe
-        var valorTotalTexto = $("#lblvalortotal").text().trim();
-        if (valorTotalTexto !== "") {
-          // Remover "Valor Total: R$" do texto e converter para número
-          var valorTotalNumerico = parseFloat(valorTotalTexto.replace("Valor Total: R$", "").trim());
-          console.log(valorTotalNumerico);
-          // Verificar se o valor é um número válido
-          if (!isNaN(valorTotalNumerico)) {
-            // Pegar os valores dos campos
-            var dinheiro = parseFloat($('#txtdinheiro').val().trim()) || 0;
-            var pix = parseFloat($('#txtpix').val().trim()) || 0;
-            var cartao = parseFloat($('#txtcartao').val().trim()) || 0;
-            var descontos = parseFloat($('#txtdesconto').val().replace("%", "")) || 0;
-            var taxa = parseFloat($('#txttaxa').val().replace("%", "")) || 0;
+    function calcularValorVendaFracionada() {
+      // Pegar os valores dos campos
+      var dinheiro = parseFloat($('#txtdinheiro').val().trim().replace("R$", "")) || 0;
+      var pix = parseFloat($('#txtpix').val().trim().replace("R$", "")) || 0;
+      var cartao = parseFloat($('#txtcartao').val().trim().replace("R$", "")) || 0;
+      var descontos = parseFloat($('#txtdesconto').val().replace("%", "")) || 0;
+      var taxa = parseFloat($('#txttaxa').val().replace("%", "")) || 0;
 
-            // Calcular soma fracionada
-            var somaFracionado = dinheiro + pix + cartao;
+      // Calcular soma fracionada
+      var somaFracionado = dinheiro + pix + cartao;
 
-            // Calcular descontos
-            var valorDescontos = valorTotalNumerico * (descontos / 100);
+      // Pegar o valor total do elemento #lblvalortotal
+      var valorTotalTexto = $("#lblvalortotal").text().trim();
+      if (valorTotalTexto !== "") {
+        // Remover "Valor Total: R$" do texto e converter para número
+        var valorTotalNumerico = parseFloat(valorTotalTexto.replace("Valor Total: R$", "").trim());
+        console.log(valorTotalNumerico);
+        // Verificar se o valor é um número válido
+        if (!isNaN(valorTotalNumerico)) {
+          // Calcular descontos
+          var valorDescontos = valorTotalNumerico * (descontos / 100);
 
-            // Calcular valor com descontos
-            var valorComDescontos = valorTotalNumerico - valorDescontos;
+          // Calcular valor com descontos
+          var valorComDescontos = valorTotalNumerico - valorDescontos;
 
-            // Calcular taxa sobre o valor com descontos
-            var resultadoFracionado = valorComDescontos * (1 + (taxa / 100));
+          // Calcular taxa sobre o valor com descontos
+          var resultadoFracionado = valorComDescontos * (1 + (taxa / 100));
 
-            // Calcular troco com descontos e taxas
-            var troco = somaFracionado - resultadoFracionado;
+          // Calcular troco com descontos e taxas
+          var troco = somaFracionado - resultadoFracionado;
 
-            // Atualizar campos
-            if (resultadoFracionado > valorTotalNumerico) {
-              $('#txttroco').val("R$ 0,00");
-            } else {
-              $('#txttroco').val(troco.toFixed(2));
-            }
-            $('#txtvalorpago').val(resultadoFracionado.toFixed(2));
+          // Atualizar campos
+          if (resultadoFracionado > valorTotalNumerico || $('#cbforma_pagamento').val() === "PIX" || $('#cbforma_pagamento').val() === "CARTÃO DE CRÉDITO" || $('#cbforma_pagamento').val() === "CARTÃO DE DÉBITO") {
+            $('#txttroco').val("0,00");
+          } else {
+            $('#txttroco').val(troco.toFixed(2));
           }
+          $('#txtvalorpago').val(resultadoFracionado.toFixed(2));
         }
       }
+    }
 
-      // Chamar a função calcularValorVendaFracionada() nos eventos de saída (blur) dos campos
-      $('#txtdinheiro, #txtpix, #txtcartao, #txtdesconto, #txttaxa').on('blur', function () {
-        calcularValorVendaFracionada();
-      });
+    // Chamar a função calcularValorVendaFracionada() nos eventos de mudança (change) dos campos relevantes
+    $('#txtdinheiro, #txtpix, #txtcartao, #txtdesconto, #txttaxa, #cbforma_pagamento').on('change', function () {
+      calcularValorVendaFracionada();
     });
 
 
