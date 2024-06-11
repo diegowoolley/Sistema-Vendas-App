@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 
     // Envia uma resposta de sucesso
-    $response = array("message" => "Venda salva com sucesso!");
+    $response = array("message" => "Compra salva com sucesso!");
     echo json_encode($response);
 } else {
     // Se o método da requisição não for POST, retorna um erro
