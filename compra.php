@@ -8,7 +8,6 @@ verificarAutenticacao();
 
 ?>
 
-
 <?php
 
 if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
@@ -209,12 +208,12 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
           <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;"
             id="cbforma_pagamento" disabled>
             <option selected>Selecione...</option>
-            <option value="1">Dinheiro</option>
-            <option value="2">Cartão de Crédito</option>
-            <option value="3">Cartão de Débito</option>
-            <option value="4">Pix</option>
-            <option value="5">Crédito Cliente</option>
-            <option value="6">Fracionado</option>
+            <option value="1">DINHEIRO</option>
+            <option value="2">CARTÃO DE CRÉDITO</option>
+            <option value="3">CCARTÃO DE DÉBITO</option>
+            <option value="4">PIX</option>
+            <option value="5">CRÉDITO CLIENTE</option>
+            <option value="6">FRACIONADO</option>
           </select>
         </div>
         <div class="col-12 col-md-4 mb-3 text-center">
@@ -260,7 +259,8 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
 
     <div class="row mt-3 text-center">
       <div class="col-6">
-        <button class="btn btn-success" style="width: 10rem;" id="btnconcluir" disabled>Concluir</button>
+        <button class="btn btn-success" style="width: 10rem;" onclick="concluirVenda()" id="btnconcluir"
+          disabled>Concluir</button>
       </div>
       <div class="col-6">
         <button class="btn btn-warning" style="width: 10rem;" id="btncancelar">Cancelar</button>
@@ -715,55 +715,164 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
 
 
 
-    $(document).ready(function () {
-      // Função para calcular o valor da venda fracionada
-      function calcularValorVendaFracionada() {
-        // Verificar se o elemento #lblvalortotal existe
-        var valorTotalTexto = $("#lblvalortotal").text().trim();
-        if (valorTotalTexto !== "") {
-          // Remover "Valor Total: R$" do texto e converter para número
-          var valorTotalNumerico = parseFloat(valorTotalTexto.replace("Valor Total: R$", "").trim());
-          console.log(valorTotalNumerico);
-          // Verificar se o valor é um número válido
-          if (!isNaN(valorTotalNumerico)) {
-            // Pegar os valores dos campos
-            var dinheiro = parseFloat($('#txtdinheiro').val().trim()) || 0;
-            var pix = parseFloat($('#txtpix').val().trim()) || 0;
-            var cartao = parseFloat($('#txtcartao').val().trim()) || 0;
-            var descontos = parseFloat($('#txtdesconto').val().replace("%", "")) || 0;
-            var taxa = parseFloat($('#txttaxa').val().replace("%", "")) || 0;
+    function calcularValorVendaFracionada() {
+      // Pegar os valores dos campos
+      var dinheiro = parseFloat($('#txtdinheiro').val().trim().replace("R$", "")) || 0;
+      var pix = parseFloat($('#txtpix').val().trim().replace("R$", "")) || 0;
+      var cartao = parseFloat($('#txtcartao').val().trim().replace("R$", "")) || 0;
+      var descontos = parseFloat($('#txtdesconto').val().replace("%", "")) || 0;
+      var taxa = parseFloat($('#txttaxa').val().replace("%", "")) || 0;
 
-            // Calcular soma fracionada
-            var somaFracionado = dinheiro + pix + cartao;
+      // Calcular soma fracionada
+      var somaFracionado = dinheiro + pix + cartao;
 
-            // Calcular descontos
-            var valorDescontos = valorTotalNumerico * (descontos / 100);
+      // Pegar o valor total do elemento #lblvalortotal
+      var valorTotalTexto = $("#lblvalortotal").text().trim();
+      if (valorTotalTexto !== "") {
+        // Remover "Valor Total: R$" do texto e converter para número
+        var valorTotalNumerico = parseFloat(valorTotalTexto.replace("Valor Total: R$", "").trim());
+        console.log(valorTotalNumerico);
+        // Verificar se o valor é um número válido
+        if (!isNaN(valorTotalNumerico)) {
+          // Calcular descontos
+          var valorDescontos = valorTotalNumerico * (descontos / 100);
 
-            // Calcular valor com descontos
-            var valorComDescontos = valorTotalNumerico - valorDescontos;
+          // Calcular valor com descontos
+          var valorComDescontos = valorTotalNumerico - valorDescontos;
 
-            // Calcular taxa sobre o valor com descontos
-            var resultadoFracionado = valorComDescontos * (1 + (taxa / 100));
+          // Calcular taxa sobre o valor com descontos
+          var resultadoFracionado = valorComDescontos * (1 + (taxa / 100));
 
-            // Calcular troco com descontos e taxas
-            var troco = somaFracionado - resultadoFracionado;
+          // Calcular troco com descontos e taxas
+          var troco = somaFracionado - resultadoFracionado;
 
-            // Atualizar campos
-            if (resultadoFracionado > valorTotalNumerico) {
-              $('#txttroco').val("R$ 0,00");
-            } else {
-              $('#txttroco').val(troco.toFixed(2));
-            }
-            $('#txtvalorpago').val(resultadoFracionado.toFixed(2));
-          }
+          // Atualizar campos
+          // if (resultadoFracionado > valorTotalNumerico || $('#cbforma_pagamento').val() === "PIX" || $('#cbforma_pagamento').val() === "CARTÃO DE CRÉDITO" || $('#cbforma_pagamento').val() === "CARTÃO DE DÉBITO") {
+          //   $('#txttroco').val("0,00");
+          // } else {
+          //   $('#txttroco').val(troco.toFixed(2));
+          // }
+          $('#txtvalorpago').val(resultadoFracionado.toFixed(2));
         }
       }
+    }
 
-      // Chamar a função calcularValorVendaFracionada() nos eventos de saída (blur) dos campos
-      $('#txtdinheiro, #txtpix, #txtcartao, #txtdesconto, #txttaxa').on('blur', function () {
-        calcularValorVendaFracionada();
-      });
+    // Chamar a função calcularValorVendaFracionada() nos eventos de mudança (change) dos campos relevantes
+    $('#txtdinheiro, #txtpix, #txtcartao, #txtdesconto, #txttaxa, #cbforma_pagamento').on('change', function () {
+      calcularValorVendaFracionada();
     });
+
+
+    function concluirVenda() {
+
+      var forma_pagamento = document.getElementById('cbforma_pagamento').options[document.getElementById('cbforma_pagamento').selectedIndex].text;
+
+      // Verificar se a forma de pagamento foi selecionada
+      if (forma_pagamento === "Selecione...") {
+        alert("Selecione uma forma de pagamento.");
+        return;
+      }
+
+      var troco = document.getElementById('txttroco').value; // Pegar o valor do troco
+      console.log(troco);
+      // Verificar se o troco está vazio ou menor ou igual que a data corrente
+      if (troco === '' || new Date(troco) < new Date()) {
+        alert("Selecione uma data válida.");
+        return;
+      }
+
+      var cod_venda_texto = document.getElementById('lblnumerovenda').innerText;
+      var numero_venda = cod_venda_texto.replace('Número da Compra:', '').trim();
+
+      var cliente = document.getElementById('txtcliente').value; // Cliente como favorecido
+
+      var vendedor = document.getElementById('txtvendedor').value;
+      var descontos = document.getElementById('txtdesconto').value;
+      var valor_total_texto = document.getElementById('lblvalortotal').innerText;
+      var valor_total = parseFloat(valor_total_texto.replace('Valor Total: R$', '').replace(',', '.').trim());
+      var valor_pago = document.getElementById('txtvalorpago').value;
+
+      // Ativar os inputs para capturar os valores
+      document.getElementById('txtdinheiro').disabled = false;
+      document.getElementById('txtpix').disabled = false;
+      document.getElementById('txtcartao').disabled = false;
+
+      var dinheiro = parseFloat(document.getElementById('txtdinheiro').value.replace('R$', '').replace(',', '.').trim());
+      var pix = parseFloat(document.getElementById('txtpix').value.replace('R$', '').replace(',', '.').trim());
+      var cartao = parseFloat(document.getElementById('txtcartao').value.replace('R$', '').replace(',', '.').trim());
+
+      var data = new Date().toISOString().slice(0, 10);
+      var hora = new Date().toLocaleTimeString();
+      var cod_empresa = <?php echo json_encode($codigoEmpresa); ?>;
+      var tipo = 'COMPRA';
+      var taxa = document.getElementById('txttaxa').value || '0.00';
+      var vencimento = troco; // O vencimento recebe o valor do troco
+
+      var itens_tb = [];
+      var tabela_itens = document.getElementById('tb_itens');
+      var linhas = tabela_itens.getElementsByTagName('tr');
+      for (var i = 1; i < linhas.length; i++) {
+        var linha = linhas[i];
+        var codigo_produto = linha.cells[1].innerText;
+        var cliente_item = linha.cells[2].innerText;
+        var produto = linha.cells[3].innerText;
+        var quantidade = linha.cells[4].innerText;
+        var categoria = linha.cells[5].innerText;
+        var valor_unitario = linha.cells[6].innerText;
+        var vendedor_item = linha.cells[7].innerText;
+        itens_tb.push({
+          codigo_produto: codigo_produto,
+          tipo: tipo,
+          cliente_item: cliente_item,
+          produto: produto,
+          quantidade: quantidade,
+          categoria: categoria,
+          valor_unitario: valor_unitario,
+          vendedor_item: vendedor_item
+        });
+      }
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          alert(response.message);
+          if (response.message === "Venda salva com sucesso!") {
+            // Atualiza a página após a mensagem de sucesso
+            window.location.reload();
+          }
+        }
+      };
+      xhttp.open("POST", "models/inserir_compra.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send(
+        "cod_venda=" + numero_venda +
+        "&cliente=" + cliente +
+        "&vendedor=" + vendedor +
+        "&descontos=" + descontos +
+        "&valor_total=" + valor_total +
+        "&valor_pago=" + valor_pago +
+        "&dinheiro=" + dinheiro +
+        "&pix=" + pix +
+        "&cartao=" + cartao +
+        "&troco=" + '' + // Deixando o troco em branco
+        "&data=" + data +
+        "&hora=" + hora +
+        "&cod_empresa=" + cod_empresa +
+        "&forma_pagamento=" + forma_pagamento +
+        "&vencimento=" + vencimento + // O vencimento recebe o valor do troco
+        "&taxa=" + taxa +
+        "&itens_tb=" + JSON.stringify(itens_tb) +
+        "&tipo=" + tipo
+      );
+
+
+      // Desativar os inputs novamente após o envio
+      document.getElementById('txtdinheiro').disabled = true;
+      document.getElementById('txtpix').disabled = true;
+      document.getElementById('txtcartao').disabled = true;
+    }
+
 
 
 
