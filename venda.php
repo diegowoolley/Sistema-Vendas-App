@@ -6,6 +6,25 @@ include_once ('models/metodos.php');
 verificarAutenticacao();
 ?>
 
+<?php
+
+if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
+  $codigoEmpresa = $_SESSION['codigoEmpresa'];
+  $nomeEmpresa = $_SESSION['nomeEmpresa'];
+
+  // Definindo variáveis globais
+  $GLOBALS['codigoEmpresaGlobal'] = $codigoEmpresa;
+  $GLOBALS['nomeEmpresaGlobal'] = $nomeEmpresa;
+
+  //echo "Código da Empresa Selecionada: " . htmlspecialchars($codigoEmpresa) . "<br>";
+  //echo "Nome da Empresa Selecionada: " . htmlspecialchars($nomeEmpresa) . "<br>";
+} else {
+  echo "Nenhuma empresa foi selecionada.";
+
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -187,12 +206,12 @@ verificarAutenticacao();
           <select class="form-select mx-auto" aria-label="Forma de Pagamento" style="width: 12rem;"
             id="cbforma_pagamento" disabled>
             <option selected>Selecione...</option>
-            <option value="1">Dinheiro</option>
-            <option value="2">Cartão de Crédito</option>
-            <option value="3">Cartão de Débito</option>
-            <option value="4">Pix</option>
-            <option value="5">Crédito Cliente</option>
-            <option value="6">Fracionado</option>
+            <option value="1">DINHEIRO</option>
+            <option value="2">CARTÃO DE CRÉDITO</option>
+            <option value="3">CARTÃO DE DÉBITO</option>
+            <option value="4">PIX</option>
+            <option value="5">CRÉDITO CLIENTE</option>
+            <option value="6">FRACIONADO</option>
           </select>
         </div>
         <div class="col-12 col-md-4 mb-3 text-center">
@@ -238,7 +257,8 @@ verificarAutenticacao();
 
     <div class="row mt-3 text-center">
       <div class="col-6">
-        <button class="btn btn-success" style="width: 10rem;" id="btnconcluir" disabled>Concluir</button>
+        <button class="btn btn-success" style="width: 10rem;" onclick="concluirVenda()" id="btnconcluir"
+          disabled>Concluir</button>
       </div>
       <div class="col-6">
         <button class="btn btn-warning" style="width: 10rem;" id="btncancelar">Cancelar</button>
@@ -300,23 +320,23 @@ verificarAutenticacao();
           atualizarTotais();
         }
       });
+    });
 
-      $('#btnfecharvenda').click(function () {
-        if ($('#tb_itens tbody tr').length <= 0) {
-          alert("Insira produtos antes de finalizar a venda!");
-          $('#txtproduto').focus();
-        } else {
-          $('#cbforma_pagamento').prop('disabled', false);
-          $('#txtdesconto').prop('disabled', false);
-          $('#txttaxa').prop('disabled', false);
-          $('#btnconcluir').prop('disabled', false);
-          $('#txtproduto').prop('disabled', true);
-          $('#txtquantidade').prop('disabled', true);
-          $('#btnadicionar').prop('disabled', true);
-          $('#btnexcluir').prop('disabled', true);
-          $('#btnfecharvenda').prop('disabled', true);
-        }
-      });
+    $('#btnfecharvenda').click(function () {
+      if ($('#tb_itens tbody tr').length <= 0) {
+        alert("Insira produtos antes de finalizar a venda!");
+        $('#txtproduto').focus();
+      } else {
+        $('#cbforma_pagamento').prop('disabled', false);
+        $('#txtdesconto').prop('disabled', false);
+        $('#txttaxa').prop('disabled', false);
+        $('#btnconcluir').prop('disabled', false);
+        $('#txtproduto').prop('disabled', true);
+        $('#txtquantidade').prop('disabled', true);
+        $('#btnadicionar').prop('disabled', true);
+        $('#btnexcluir').prop('disabled', true);
+        $('#btnfecharvenda').prop('disabled', true);
+      }
     });
 
     $(function () {
@@ -743,7 +763,106 @@ verificarAutenticacao();
     });
 
 
+    function concluirVenda() {
+      var forma_pagamento = document.getElementById('cbforma_pagamento').options[document.getElementById('cbforma_pagamento').selectedIndex].text;
+      if (forma_pagamento === "Selecione...") {
+        alert("Selecione uma forma de pagamento.");
+        return;
+      }
 
+      var cod_venda_texto = document.getElementById('lblnumerovenda').innerText;
+      var numero_venda = cod_venda_texto.replace('Número da Venda:', '').trim();
+
+      var cliente = document.getElementById('txtcliente').value;
+      var vendedor = document.getElementById('txtvendedor').value;
+      var descontos = document.getElementById('txtdesconto').value;
+      var valor_total_texto = document.getElementById('lblvalortotal').innerText;
+      var valor_total = parseFloat(valor_total_texto.replace('Valor Total: R$', '').replace(',', '.').trim());
+      var valor_pago = document.getElementById('txtvalorpago').value;
+
+      // Ativar os inputs para capturar os valores
+      document.getElementById('txtdinheiro').disabled = false;
+      document.getElementById('txtpix').disabled = false;
+      document.getElementById('txtcartao').disabled = false;
+
+      var dinheiro = parseFloat(document.getElementById('txtdinheiro').value.replace('R$', '').replace(',', '.').trim());
+      var pix = parseFloat(document.getElementById('txtpix').value.replace('R$', '').replace(',', '.').trim());
+      var cartao = parseFloat(document.getElementById('txtcartao').value.replace('R$', '').replace(',', '.').trim());
+
+      var troco = document.getElementById('txttroco').value;
+      var data = new Date().toISOString().slice(0, 10);
+      var hora = new Date().toLocaleTimeString();
+      var cod_empresa = <?php echo json_encode($codigoEmpresa); ?>;
+      var tipo = 'VENDA';
+      var taxa = document.getElementById('txttaxa').value || '0.00';
+      var vencimento = data; // Define vencimento como a data corrente
+
+      var itens_tb = [];
+      var tabela_itens = document.getElementById('tb_itens');
+      var linhas = tabela_itens.getElementsByTagName('tr');
+      for (var i = 1; i < linhas.length; i++) {
+        var linha = linhas[i];
+        var codigo_produto = linha.cells[1].innerText;
+        var cliente_item = linha.cells[2].innerText;
+        var produto = linha.cells[3].innerText;
+        var quantidade = linha.cells[4].innerText;
+        var categoria = linha.cells[5].innerText;
+        var valor_unitario = linha.cells[6].innerText;
+        var vendedor_item = linha.cells[7].innerText;
+        itens_tb.push({
+          codigo_produto: codigo_produto,
+          tipo: tipo,
+          cliente_item: cliente_item,
+          produto: produto,
+          quantidade: quantidade,
+          categoria: categoria,
+          valor_unitario: valor_unitario,
+          vendedor_item: vendedor_item
+        });
+      }
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          alert(response.message);
+          if (response.message === "Venda salva com sucesso!") {
+            // Atualiza a página após a mensagem de sucesso
+            window.location.reload();
+          }
+        }
+      };
+      xhttp.open("POST", "models/inserir_venda.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send(
+        "cod_venda=" + numero_venda +
+        "&cliente=" + cliente +
+        "&vendedor=" + vendedor +
+        "&descontos=" + descontos +
+        "&valor_total=" + valor_total +
+        "&valor_pago=" + valor_pago +
+        "&dinheiro=" + dinheiro +
+        "&pix=" + pix +
+        "&cartao=" + cartao +
+        "&troco=" + troco +
+        "&data=" + data +
+        "&hora=" + hora +
+        "&cod_empresa=" + cod_empresa +
+        "&forma_pagamento=" + forma_pagamento +
+        "&vencimento=" + vencimento +
+        "&taxa=" + taxa +
+        "&itens_tb=" + JSON.stringify(itens_tb) +
+        "&tipo=" + tipo
+      );
+
+      // Desativar os inputs novamente após o envio
+      document.getElementById('txtdinheiro').disabled = true;
+      document.getElementById('txtpix').disabled = true;
+      document.getElementById('txtcartao').disabled = true;
+
+
+
+    }
 
 
 
