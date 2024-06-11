@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cartao = $_POST['cartao'];
     $vencimento = $_POST['data']; // Recebe a data de vencimento
     $taxa = $_POST['taxa'];
-    $status = 'Á RECEBER'; // Define status conforme sua lógica
+    $status = 'Á PAGAR'; // Define status conforme sua lógica
     $favorecido = $_POST['cliente']; // Favorecido recebe o valor do cliente
     $documento = ''; // Define documento conforme sua lógica
     $descricao = ''; // Define descrição conforme sua lógica
