@@ -790,7 +790,8 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
       var descontos = document.getElementById('txtdesconto').value;
       var valor_total_texto = document.getElementById('lblvalortotal').innerText;
       var valor_total = parseFloat(valor_total_texto.replace('Valor Total: R$', '').replace(',', '.').trim());
-      var valor_pago = document.getElementById('txtvalorpago').value;
+      var valor_pago_texto = document.getElementById('txtvalorpago').value;
+      var valor_pago = parseFloat(valor_pago_texto.replace('R$', '').replace(',', '.').trim());
 
       // Ativar os inputs para capturar os valores
       document.getElementById('txtdinheiro').disabled = false;
@@ -806,7 +807,7 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
       var cod_empresa = <?php echo json_encode($codigoEmpresa); ?>;
       var tipo = 'COMPRA';
       var taxa = document.getElementById('txttaxa').value || '0.00';
-      var vencimento = troco; // O vencimento recebe o valor do troco
+      var vencimento = troco;
 
       var itens_tb = [];
       var tabela_itens = document.getElementById('tb_itens');
@@ -837,7 +838,7 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
         if (this.readyState == 4 && this.status == 200) {
           var response = JSON.parse(this.responseText);
           alert(response.message);
-          if (response.message === "Venda salva com sucesso!") {
+          if (response.message === "Compra salva com sucesso!") {
             // Atualiza a página após a mensagem de sucesso
             window.location.reload();
           }

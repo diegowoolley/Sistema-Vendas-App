@@ -775,7 +775,8 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
       var descontos = document.getElementById('txtdesconto').value;
       var valor_total_texto = document.getElementById('lblvalortotal').innerText;
       var valor_total = parseFloat(valor_total_texto.replace('Valor Total: R$', '').replace(',', '.').trim());
-      var valor_pago = document.getElementById('txtvalorpago').value;
+      var valor_pago_texto = document.getElementById('txtvalorpago').value;
+      var valor_pago = parseFloat(valor_pago_texto.replace('R$', '').replace(',', '.').trim());
 
       // Ativar os inputs para capturar os valores
       document.getElementById('txtdinheiro').disabled = false;
