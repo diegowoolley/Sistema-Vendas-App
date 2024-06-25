@@ -773,7 +773,7 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
         return;
       }
 
-      var troco = document.getElementById('txttroco').value; // Pegar o valor do troco
+      var troco = document.getElementById('txttroco').value;
       console.log(troco);
       // Verificar se o troco está vazio ou menor ou igual que a data corrente
       if (troco === '' || new Date(troco) < new Date()) {

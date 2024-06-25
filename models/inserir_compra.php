@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dinheiro = $_POST['dinheiro'];
     $pix = $_POST['pix'];
     $cartao = $_POST['cartao'];
-    $vencimento = $_POST['data']; // Recebe a data de vencimento
+    $vencimento = $_POST['vencimento']; // Recebe a data de vencimento
     $taxa = $_POST['taxa'];
     $status = 'Á PAGAR'; // Define status conforme sua lógica
     $favorecido = $_POST['cliente']; // Favorecido recebe o valor do cliente
