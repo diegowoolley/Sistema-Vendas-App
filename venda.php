@@ -518,7 +518,7 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
 
 
     $("#btnadicionar").click(function () {
-      var contador = 1;
+      
 
       // Verifica se um cliente foi selecionado
       if ($("#txtcliente").val() == "") {
@@ -576,11 +576,13 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
               }
             });
 
+            var ultimoId = $("#tb_itens tbody tr:last td:first").text();
+            var novoId = (ultimoId !== "") ? parseInt(ultimoId) + 1 : 1;
             if (!produtoExistente) {
               // Adiciona a linha à tabela
               $("#tb_itens tbody").append(
                 "<tr class='text-center'>" +
-                "<td>" + contador++ + "</td>" + // ID
+                "<td>" + novoId + "</td>" + // ID
                 "<td>" + produto.cod_produto + "</td>" + // Código do Produto
                 "<td>" + $("#txtcliente").val() + "</td>" + // Cliente
                 "<td>" + produto.nome_produto + "</td>" + // Produto
