@@ -1,4 +1,12 @@
 Plataforma Web para o sistema de vendas(Ainda em Desenvolvimento)
+Tecnologias usadas:
+* Html 5
+* Bootstrap
+* CSS3
+* JavaScript
+* JQuery
+* AJAX
+* PHP
 
 ![tela de login app](https://github.com/diegowoolley/Site/assets/154614603/5141f372-d170-4253-b6b8-40d5a65994b8)
 ![tela principal app](https://github.com/diegowoolley/Site/assets/154614603/e3c15381-6385-4dd2-bf5b-bd030f2963b1)
