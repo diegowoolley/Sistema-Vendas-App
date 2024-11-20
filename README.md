@@ -1,4 +1,4 @@
-Plataforma Web para o sistema de vendas
+Plataforma Web para o sistema de vendas - 
 Tecnologias usadas:
 * Html 5
 * Bootstrap
