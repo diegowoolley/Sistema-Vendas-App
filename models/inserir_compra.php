@@ -58,7 +58,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!$stmt_vendas->execute()) {
             echo "Erro ao inserir na tabela vendas: " . $conn->error;
         }
+
+        // Atualiza a quantidade do produto na tabela produtos
+        $sql_update_produto = "UPDATE cad_produtos SET quantidade = quantidade + ? WHERE cod_produto = ?";
+        $stmt_update_produto = $conn->prepare($sql_update_produto);
+        $stmt_update_produto->bind_param("is", $quantidade, $codigo_produto);
+
+        if (!$stmt_update_produto->execute()) {
+            echo "Erro ao atualizar estoque: " . $conn->error;
+        }
+
+        $stmt_update_produto->close();
     }
+    
 
     // Prepara e executa as consultas SQL para inserção na tabela caixa
     $sql_caixa = "INSERT INTO caixa (cod_venda, tipo, cliente, vendedor, desconto, forma_pagamento, valor_total, valor_pago, data, hora, dinheiro, pix, cartao, vencimento, taxa, cod_empresa, status, favorecido, documento, descricao)

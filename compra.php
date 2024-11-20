@@ -186,7 +186,7 @@ if (isset($_SESSION['codigoEmpresa']) && isset($_SESSION['nomeEmpresa'])) {
           <tr class="text-center">
             <th scope="col">ID</th>
             <th scope="col">Código do Produto</th>
-            <th scope="col">Cliente</th>
+            <th scope="col">Fornecedor</th>
             <th scope="col">Produto</th>
             <th scope="col">Quantidade</th>
             <th scope="col">Categoria</th>

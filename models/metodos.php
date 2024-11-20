@@ -8,7 +8,7 @@ function vendashoje()
 
     global $codigoEmpresaGlobal;
 
-    $sql = "SELECT * FROM caixa WHERE cod_empresa = ? AND (tipo = 'VENDA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND data = CURDATE()";
+    $sql = "SELECT * FROM caixa WHERE cod_empresa = ? AND (tipo = 'VENDA' OR tipo = 'VENDA AVULSA' OR tipo = 'VENDA PDV' OR tipo = 'ORDEM DE SERVIÇO') AND data = CURDATE()";
 
     // Prepara a consulta
     $stmt = $conn->prepare($sql);

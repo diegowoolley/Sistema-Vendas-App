@@ -21,12 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dinheiro = $_POST['dinheiro'];
     $pix = $_POST['pix'];
     $cartao = $_POST['cartao'];
-    $vencimento = $_POST['data']; // Recebe a data de vencimento
+    $vencimento = $_POST['data'];
     $taxa = $_POST['taxa'];
-    $status = 'Á RECEBER'; 
-    $favorecido = ''; 
-    $documento = ''; 
-    $descricao = ''; 
+    $status = 'Á RECEBER';
+    $favorecido = '';
+    $documento = '';
+    $descricao = '';
 
     // Conecta ao banco de dados
     $conn = conectarBanco();
@@ -36,13 +36,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro na conexão: " . $conn->connect_error);
     }
 
-    // Prepara e executa as consultas SQL para inserção na tabela vendas e caixa
+    // Prepara a consulta SQL para inserção na tabela vendas
     $sql_vendas = "INSERT INTO vendas (cod_venda, tipo, cliente, produto, quantidade, categoria, cod_produto, valor_unitario, dinheiro, pix, cartao, taxa, vendedor, descontos, forma_pagamento, valor_total, valor_pago, troco, data, hora, cod_empresa, vencimento)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt_vendas = $conn->prepare($sql_vendas);
 
-    // Inserção de itens_tb na tabela vendas
+    // Processa cada item na tabela de itens
     foreach ($itens_tb as $item) {
         $codigo_produto = $item['codigo_produto'];
         $cliente_item = $item['cliente_item'];
@@ -52,13 +52,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $valor_unitario = $item['valor_unitario'];
         $vendedor_item = $item['vendedor_item'];
 
+        // Insere o item na tabela vendas
         $stmt_vendas->bind_param("ssssssssssssssssssssss", $cod_venda, $tipo, $cliente_item, $produto, $quantidade, $categoria, $codigo_produto, $valor_unitario, $dinheiro, $pix, $cartao, $taxa, $vendedor_item, $descontos, $forma_pagamento, $valor_total, $valor_pago, $troco, $data, $hora, $cod_empresa, $vencimento);
         if (!$stmt_vendas->execute()) {
             echo "Erro ao inserir na tabela vendas: " . $conn->error;
         }
+
+        // Atualiza a quantidade do produto na tabela produtos
+        $sql_update_produto = "UPDATE cad_produtos SET quantidade = quantidade - ? WHERE cod_produto = ?";
+        $stmt_update_produto = $conn->prepare($sql_update_produto);
+        $stmt_update_produto->bind_param("is", $quantidade, $codigo_produto);
+
+        if (!$stmt_update_produto->execute()) {
+            echo "Erro ao atualizar estoque: " . $conn->error;
+        }
+
+        $stmt_update_produto->close();
     }
 
-    // Prepara e executa as consultas SQL para inserção na tabela caixa
+    // Prepara a consulta SQL para inserção na tabela caixa
     $sql_caixa = "INSERT INTO caixa (cod_venda, tipo, cliente, vendedor, desconto, forma_pagamento, valor_total, valor_pago, data, hora, dinheiro, pix, cartao, vencimento, taxa, cod_empresa, status, favorecido, documento, descricao)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -71,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Erro ao inserir na tabela caixa: " . $conn->error;
     }
 
-    // Fecha a conexão com o banco de dados
+    // Fecha as conexões
     $stmt_vendas->close();
     $stmt_caixa->close();
     $conn->close();

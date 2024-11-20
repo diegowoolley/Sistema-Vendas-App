@@ -1,4 +1,5 @@
 <?php
+
 // Inclui o arquivo que contém as funções de autenticação
 include_once ('models/metodos.php');
 
